@@ -72,6 +72,7 @@ p:last-child { margin-bottom: 0; }
 .section { padding-bottom: clamp(3rem, 6vw, 6rem); }
 .mission-inner { display: grid; grid-template-columns: minmax(0, .75fr) minmax(0, 1.25fr); gap: 1rem 2rem; padding-block: clamp(1.5rem, 3vw, 2.75rem); border-block: 1px solid var(--rule); }
 .mission-inner p { max-width: 58ch; font-size: clamp(1.075rem, 1.5vw, 1.25rem); }
+.mission-art { width: min(100%, 15rem); aspect-ratio: 3 / 1; margin-top: .75rem; object-fit: cover; }
 .mission.section { padding-bottom: clamp(2rem, 4vw, 3.5rem); }
 .mission + .section .section-heading { border-top: 0; padding-top: 0; }
 .section-heading { display: flex; align-items: end; justify-content: space-between; gap: 1rem; margin-bottom: 1.45rem; padding-top: 1.6rem; border-top: 1px solid var(--rule); }
@@ -98,7 +99,10 @@ p:last-child { margin-bottom: 0; }
 .newsletter-panel h2 { margin-bottom: .6rem; }
 .newsletter-panel .small { margin-top: .5rem; color: var(--muted); }
 .page-heading { padding-block: clamp(3rem, 7vw, 7rem) clamp(2rem, 5vw, 4rem); }
-.page-heading > .text-link { display: inline-block; margin-top: 1.25rem; }
+.page-heading-art { display: grid; grid-template-columns: minmax(0, 1fr) minmax(0, .62fr); align-items: center; gap: clamp(1.5rem, 5vw, 5rem); }
+.page-heading-art h1 { font-size: clamp(3.5rem, 7vw, 7.4rem); }
+.page-intro > .text-link { display: inline-block; margin-top: 1.25rem; }
+.page-art { width: 100%; aspect-ratio: 3 / 2; object-fit: cover; background: #e6e9dc; }
 .archive-group { padding-bottom: clamp(3rem, 5vw, 5rem); }
 .archive-group h2 { margin-bottom: 1.5rem; padding-top: 1.35rem; border-top: 1px solid var(--rule); scroll-margin-top: 1.5rem; }
 .archive-group .issue-title { font-size: clamp(1.8rem, 2.6vw, 2.5rem); }
@@ -147,10 +151,13 @@ p:last-child { margin-bottom: 0; }
 .reach-countries { display: flex; flex-wrap: wrap; gap: .55rem; margin: 1rem 0 0; padding: 0; list-style: none; }
 .reach-countries li { display: flex; align-items: center; gap: .45rem; padding: .2rem .65rem; border: 1px solid var(--rule); font-size: .9rem; }
 .reach-countries li::before { content: ''; width: .55rem; height: .55rem; flex: 0 0 .55rem; border-radius: 50%; background: var(--map-highlight); }
-.issue-detail { display: grid; grid-template-columns: minmax(0, 1fr) minmax(0, .75fr); align-items: start; gap: 2rem clamp(2rem, 7vw, 7rem); padding-top: clamp(2.5rem, 5vw, 5rem); padding-bottom: clamp(3rem, 7vw, 7rem); }
+.issue-detail { display: grid; grid-template-columns: minmax(0, 1fr) minmax(0, .75fr); grid-template-areas: 'intro cover' 'art cover'; grid-template-rows: auto 1fr; align-items: start; gap: 2rem clamp(2rem, 7vw, 7rem); padding-top: clamp(2.5rem, 5vw, 5rem); padding-bottom: clamp(3rem, 7vw, 7rem); }
 .issue-detail h1 { font-size: clamp(3.5rem, 7vw, 6.75rem); }
 .issue-detail .cover-stage { padding: clamp(1rem, 3vw, 2.5rem); aspect-ratio: auto; }
 .issue-detail .cover-stage img { height: auto; width: auto; max-height: 38rem; }
+.issue-detail-copy { grid-area: intro; }
+.issue-cover { grid-area: cover; }
+.issue-art { grid-area: art; width: min(100%, 31rem); aspect-ratio: 5 / 2; object-fit: cover; background: #e6e9dc; }
 .issue-detail-copy .back { display: inline-block; margin-bottom: 1.3rem; }
 .issue-detail .prose { margin-top: 2.25rem; }
 .issue-contents h3 { margin-top: 1.25rem; font-size: 1.9rem; }
@@ -183,12 +190,16 @@ p:last-child { margin-bottom: 0; }
   .issue-grid:not(.featured-grid), .masthead-grid { grid-template-columns: repeat(2, minmax(0, 1fr)); }
 }
 @media (max-width: 600px) {
-  .hero, .community, .content-layout, .listing, .issue-detail, .footer-inner, .mission-inner, .newsletter-panel { grid-template-columns: 1fr; }
+  .hero, .community, .content-layout, .listing, .issue-detail, .footer-inner, .mission-inner, .newsletter-panel, .page-heading-art { grid-template-columns: 1fr; }
   .hero { padding-top: 2.1rem; gap: 1.85rem; }
   .hero-art { aspect-ratio: 4 / 3; }
   .section-heading { align-items: start; flex-direction: column; gap: .5rem; }
+  .mission-title { display: flex; align-items: center; justify-content: space-between; gap: .75rem; }
+  .mission-art { width: 30%; margin-top: 0; aspect-ratio: 2 / 1; }
   .featured-grid { grid-template-columns: repeat(2, minmax(0, 1fr)); }
   .issue-card .cover-stage { padding: .75rem; }
+  .issue-detail { grid-template-areas: 'intro' 'cover' 'art'; grid-template-rows: auto; }
+  .page-art { aspect-ratio: 16 / 9; }
   .community-panel { padding: 1.65rem; }
 }
 @media (max-width: 350px) {

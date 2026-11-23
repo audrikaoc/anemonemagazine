@@ -37,6 +37,15 @@ def metadata(issue):
     return f'{label} · {issue["date"]}'
 
 
+def artwork(filename, root, css_class, *, lazy=False):
+    path = f'assets/images/{filename}'
+    if not (OUTPUT / path).is_file():
+        raise FileNotFoundError(OUTPUT / path)
+    loading = ' loading="lazy"' if lazy else ''
+    return (f'<img class="{css_class}" src="{root}{escape(path)}" alt="" '
+            f'width="960" height="640" decoding="async"{loading}>')
+
+
 def cover(issue, root, detail=False):
     title = escape(issue['title'])
     if filename := issue.get('cover'):
@@ -109,7 +118,7 @@ def team_cards(people, root):
     return '\n    '.join(cards)
 
 
-def issue_body(issue):
+def issue_body(issue, default_artwork):
     title = escape(issue['title'])
     if reader := issue.get('reader'):
         description = '<p class="lede">Read the full edition in the magazine’s Canva reader.</p>'
@@ -132,7 +141,8 @@ def issue_body(issue):
     {description}
     <div class="actions">{action}</div>{contents}
   </div>
-  <figure>{cover(issue, '../', detail=True)}</figure>
+  <figure class="issue-cover">{cover(issue, '../', detail=True)}</figure>
+  {artwork(issue.get('artwork', default_artwork), '../', 'issue-art', lazy=True)}
 </article>'''
 
 
@@ -152,6 +162,7 @@ def build():
     data = json.loads((SOURCE / 'magazine.json').read_text(encoding='utf-8'))
     layout = (SOURCE / 'layout.html').read_text(encoding='utf-8')
     issues = {issue['slug']: issue for issue in data['issues']}
+    page_artwork = data['page_artwork']
     external_links = {key: escape(value) for key, value in data.items() if isinstance(value, str)}
     urls = []
 
@@ -168,8 +179,9 @@ def build():
   <script>
     if (location.hostname === 'audrikaoc.github.io') {
       document.addEventListener('DOMContentLoaded', () => {
-        for (const link of document.querySelectorAll('[href^="/"]')) {
-          link.setAttribute('href', '/anemonemagazine' + link.getAttribute('href'));
+        for (const element of document.querySelectorAll('[href^="/"], [src^="/"]')) {
+          const attribute = element.hasAttribute('href') ? 'href' : 'src';
+          element.setAttribute(attribute, '/anemonemagazine' + element.getAttribute(attribute));
         }
       });
     }
@@ -180,9 +192,11 @@ def build():
         for target, label in NAVIGATION.items():
             current = ' aria-current="page"' if target == slug else ''
             navigation += f'<li><a href="{root}{target}/"{current}>{label}</a></li>'
-        image = 'assets/images/anemones-daylight.jpg'
-        if slug in issues and issues[slug].get('cover'):
-            image = f'assets/covers/{issues[slug]["cover"]}'
+        issue = issues.get(slug, {})
+        image_file = page_artwork.get(slug, issue.get('artwork', 'anemones-daylight.jpg'))
+        image = f'assets/images/{image_file}'
+        if cover_file := issue.get('cover'):
+            image = f'assets/covers/{cover_file}'
         context = {
             **external_links,
             'root': root,
@@ -209,11 +223,14 @@ def build():
             'themed_issues': issue_cards((issue for issue in issues.values() if 'theme' in issue), root) if slug == 'issues' else '',
             'team': team_cards(data['team'], root) if slug == 'masthead' else '',
             'reach_audiences': reach_audiences(root) if slug == 'reach' else '',
+            'page_artwork': artwork(page_artwork[slug], root, 'page-art') if slug in page_artwork else '',
+            'mission_artwork': artwork('anemone-engraving.jpg', root, 'mission-art', lazy=True) if not slug else '',
         }
         render(slug, title, desc, substitute(template, keys))
 
     for issue in issues.values():
-        render(issue['slug'], issue['title'], f'{metadata(issue)} from Anemone Magazine.', issue_body(issue))
+        render(issue['slug'], issue['title'], f'{metadata(issue)} from Anemone Magazine.',
+               issue_body(issue, page_artwork['issues']))
 
     for slug, (destination, message) in {
         'home': ('', 'Anemone Magazine'),
@@ -227,8 +244,11 @@ def build():
     }.items():
         render(slug, message, 'This page has moved.', migration_redirect(destination, message), redirect=destination)
 
-    render('404', 'Page missing', 'Find your way back to Anemone Magazine.',
-           (SOURCE / 'pages' / '404.html').read_text(encoding='utf-8'), page_missing=True)
+    missing = substitute((SOURCE / 'pages' / '404.html').read_text(encoding='utf-8'), {
+        'root': '/',
+        'page_artwork': artwork(page_artwork['404'], '/', 'page-art'),
+    })
+    render('404', 'Page missing', 'Find your way back to Anemone Magazine.', missing, page_missing=True)
     write_page(OUTPUT / '.nojekyll', '')
     locations = '\n'.join(f'  <url><loc>{xml_escape(url)}</loc></url>' for url in sorted(urls))
     write_page(OUTPUT / 'sitemap.xml', '<?xml version="1.0" encoding="UTF-8"?>\n'
