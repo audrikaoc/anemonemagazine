@@ -101,6 +101,25 @@ def pick_cards(picks, root, heading_level):
     )
 
 
+def pick_spotlight(pick, root):
+    feature = f'{root}editors-picks/{escape(pick["slug"])}/'
+    return f'''<section class="wrap section" aria-labelledby="spotlight-title">
+  <div class="spotlight-panel">
+    <div class="spotlight-copy">
+      <p class="eyebrow">Editor’s Pick · {escape(pick['genre'])}</p>
+      <h2 id="spotlight-title">{escape(pick['title'])}</h2>
+      <p class="pick-byline">By {escape(pick['author'])}</p>
+      <blockquote class="spotlight-excerpt" cite="{escape(pick['reader'])}"><p>{escape(pick['excerpt'])}</p></blockquote>
+      <div class="actions">
+        <a class="button" href="{feature}">Read the feature</a>
+        <a class="text-link" href="{feature}#share-pick">Share this pick</a>
+      </div>
+    </div>
+    {artwork(pick['artwork'], root, 'spotlight-image', lazy=True)}
+  </div>
+</section>'''
+
+
 def pick_body(pick, issue, root, graphic):
     title = escape(pick['title'])
     reader = escape(pick['reader'])
@@ -306,6 +325,10 @@ def write_page(path, html):
 def build():
     data = json.loads((SOURCE / 'magazine.json').read_text(encoding='utf-8'))
     picks = json.loads((SOURCE / 'editors-picks.json').read_text(encoding='utf-8'))
+    spotlight = next(iter(picks), None)
+    if spotlight_slug := data.get('spotlight_pick'):
+        spotlight = {pick['slug']: pick for pick in picks}[spotlight_slug]
+    more_picks = [pick for pick in picks if pick != spotlight][:3]
     resources = json.loads((SOURCE / 'writing-resources.json').read_text(encoding='utf-8'))
     schedule = json.loads((SOURCE / 'submission-calendar.json').read_text(encoding='utf-8'))
     calls = calendar_calls(schedule['calls'], data['instagram'])
@@ -381,7 +404,7 @@ def build():
             download = f'\n      <a class="button" href="{root}{CALENDAR_FILE}" download>Download deadlines (.ics)</a>'
         selections = ''
         if not slug:
-            selections = pick_cards(picks[:3], root, 3)
+            selections = pick_cards(more_picks, root, 3)
         elif slug == 'editors-picks':
             selections = pick_cards(picks, root, 2)
         keys = {
@@ -398,6 +421,8 @@ def build():
             'deadline_preview': deadline_preview(schedule['calls'], root) if not slug else '',
             'calendar_calls': calls,
             'calendar_download': download,
+            'pick_spotlight': pick_spotlight(spotlight, root) if not slug and spotlight else '',
+            'more_picks_visibility': '' if more_picks else ' hidden',
             'editors_picks': selections,
             'writing_resources': resource_cards(resources, root) if slug == 'writing-resources' else '',
         }

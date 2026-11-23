@@ -81,6 +81,12 @@ p:last-child { margin-bottom: 0; }
   pointer-events: none;
 }
 .section { padding-bottom: clamp(3rem, 6vw, 6rem); }
+.spotlight-panel { display: grid; grid-template-columns: minmax(0, 1.1fr) minmax(0, .9fr); background: var(--lilac); }
+.spotlight-copy { align-self: center; padding: clamp(1.4rem, 4vw, 3.5rem); }
+.spotlight-copy h2 { font-size: clamp(3rem, 6vw, 6rem); scroll-margin-top: 2rem; }
+.spotlight-excerpt { margin: 1.2rem 0 0; padding-left: 1rem; border-left: 2px solid var(--accent); }
+.spotlight-excerpt p { font: clamp(1.45rem, 3vw, 2.3rem)/1.18 var(--serif); white-space: pre-line; }
+.spotlight-image { width: 100%; height: 100%; object-fit: cover; }
 .mission-inner { display: grid; grid-template-columns: minmax(0, .75fr) minmax(0, 1.25fr); gap: 1rem 2rem; padding-block: clamp(1.5rem, 3vw, 2.75rem); border-block: 1px solid var(--rule); }
 .mission-inner p { max-width: 58ch; font-size: clamp(1.075rem, 1.5vw, 1.25rem); }
 .mission-art { width: min(100%, 15rem); aspect-ratio: 3 / 1; margin-top: .75rem; object-fit: cover; }
@@ -90,6 +96,7 @@ p:last-child { margin-bottom: 0; }
 .issue-grid { display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); gap: 2rem clamp(1rem, 2.7vw, 2.2rem); }
 .featured-grid { grid-template-columns: repeat(3, minmax(0, 1fr)); }
 .pick-grid { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: clamp(1rem, 2.5vw, 2rem); }
+.pick-grid.home-picks-grid { grid-template-columns: repeat(auto-fit, minmax(min(100%, 16rem), 1fr)); }
 .pick-card { display: grid; grid-template-rows: auto 1fr; border: 1px solid var(--rule); text-decoration: none; }
 .pick-image { width: 100%; aspect-ratio: 16 / 9; object-fit: cover; background: #e6e9dc; }
 .pick-copy { padding: clamp(1rem, 2.5vw, 1.65rem); }
@@ -265,6 +272,10 @@ p:last-child { margin-bottom: 0; }
   .hero-art img { object-position: 80% center; }
   .issue-grid:not(.featured-grid), .masthead-grid { grid-template-columns: repeat(2, minmax(0, 1fr)); }
   .pick-grid { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+}
+@media (max-width: 720px) {
+  .spotlight-panel { grid-template-columns: 1fr; }
+  .spotlight-image { height: auto; }
 }
 @media (max-width: 600px) {
   .hero, .community, .content-layout, .listing, .issue-detail, .footer-inner, .mission-inner, .newsletter-panel, .page-heading-art, .prompt-grid { grid-template-columns: 1fr; }
