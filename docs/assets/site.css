@@ -125,6 +125,29 @@ p:last-child { margin-bottom: 0; }
 .faq-list summary { cursor: pointer; font-weight: 700; }
 .faq-list details p { margin: .7rem 0 0; }
 .faq-list > p { margin-top: 1.25rem; }
+.reach-heading { padding-bottom: clamp(1.5rem, 4vw, 3rem); }
+.visually-hidden { position: absolute; width: 1px; height: 1px; overflow: hidden; clip-path: inset(50%); white-space: nowrap; }
+.reach-switcher { display: grid; grid-template-columns: auto auto 1fr; gap: .5rem; min-width: 0; margin: 0; padding: 0; border: 0; }
+.reach-switcher > label { display: grid; place-items: center; min-height: 2.75rem; padding: .5rem clamp(.7rem, 2vw, 1.3rem); border: 1px solid var(--rule); font-weight: 650; cursor: pointer; }
+.reach-switcher > label:hover { border-color: var(--green); }
+.reach-switcher > input:focus-visible + label { outline: 2px solid #6c427c; outline-offset: .2rem; }
+.reach-switcher > input:checked + label { color: var(--paper); background: var(--green); border-color: var(--green); }
+.reach-panel { display: none; grid-column: 1 / -1; margin-top: .4rem; border: 1px solid var(--rule); }
+.reach-contributors { --map-highlight: #465c3e; }
+.reach-readers { --map-highlight: #654970; }
+#show-contributors:checked ~ .reach-contributors,
+#show-readers:checked ~ .reach-readers { display: block; }
+.reach-map { display: block; width: 100%; max-height: 36rem; background: #edf1e8; }
+.map-grid { fill: none; stroke: #d7dfd3; stroke-width: .55; }
+.map-land { fill: #cbd4c4; stroke: #f1f4ee; stroke-width: .55; stroke-linejoin: round; }
+.map-highlight { fill: var(--map-highlight); stroke: #f1f4ee; stroke-width: .65; stroke-linejoin: round; }
+.reach-details { padding: clamp(1rem, 3vw, 2rem); border-top: 1px solid var(--rule); }
+.reach-details h2 { margin-bottom: .55rem; font-size: clamp(2rem, 4vw, 3.2rem); }
+.reach-details p { color: var(--muted); }
+.reach-countries { display: flex; flex-wrap: wrap; gap: .55rem; margin: 1rem 0 0; padding: 0; list-style: none; }
+.reach-countries li { display: flex; align-items: center; gap: .45rem; padding: .2rem .65rem; border: 1px solid var(--rule); font-size: .9rem; }
+.reach-countries li::before { content: ''; width: .55rem; height: .55rem; flex: 0 0 .55rem; border-radius: 50%; background: var(--map-highlight); }
+.reach-credit { margin-top: .65rem; color: var(--muted); }
 .issue-detail { display: grid; grid-template-columns: minmax(0, 1fr) minmax(0, .75fr); align-items: start; gap: 2rem clamp(2rem, 7vw, 7rem); padding-top: clamp(2.5rem, 5vw, 5rem); padding-bottom: clamp(3rem, 7vw, 7rem); }
 .issue-detail h1 { font-size: clamp(3.5rem, 7vw, 6.75rem); }
 .issue-detail .cover-stage { padding: clamp(1rem, 3vw, 2.5rem); aspect-ratio: auto; }

@@ -19,6 +19,13 @@ Visit `http://127.0.0.1:8000/` to preview.
 
 GitHub runs the internal link checker and checks that the generated pages match their source on each push and pull request.
 
+## Update the Reach page
+
+- Update `site/reach.json` with public, aggregate country codes such as `AU`, `GB`, and `US`, then rebuild the site. The map highlights each listed country once.
+- The initial contributor countries come from locations people shared in their bios in Issues 2, 4, 5, and 6. Update the contributor note if you change the source or scope.
+- For readers, enter the countries listed in **Analytics → Traffic → Geography** in Squarespace and record the date range in the reader note. These are approximate locations for site visits. The Reach page uses the published country list and doesn’t collect analytics.
+- The bundled map uses [Natural Earth 1:50m map units, version 5.1.2](https://github.com/nvkelso/natural-earth-vector/blob/v5.1.2/geojson/ne_50m_admin_0_map_units.geojson). If the map data needs updating, download the GeoJSON and run `python3 scripts/make_world_map.py path/to/map-units.geojson`, then rebuild the site.
+
 ## Publish to GitHub Pages
 
 1. Open the repository’s [Pages settings](https://github.com/audrikaoc/anemonemagazine/settings/pages). Under **Build and deployment**, choose **Deploy from a branch**, **main**, and **/docs**. Save and wait for `https://audrikaoc.github.io/anemonemagazine/` to serve the site. Future pushes to `main` will publish the updated `docs/` directory.

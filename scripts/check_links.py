@@ -5,6 +5,7 @@ import re
 from html.parser import HTMLParser
 from pathlib import Path
 from urllib.parse import unquote, urljoin, urlsplit
+from xml.etree import ElementTree
 
 DOCS = Path(__file__).resolve().parents[1] / 'docs'
 HOST = 'www.anemonemagazine.com'
@@ -30,6 +31,9 @@ class Page(HTMLParser):
 def check():
     pages = {path: Page(path) for path in DOCS.rglob('*.html')}
     sources = {path: page.links for path, page in pages.items()}
+    targets = {path: page.targets for path, page in pages.items()}
+    for path in DOCS.rglob('*.svg'):
+        targets[path] = {element.get('id') for element in ElementTree.parse(path).iter() if 'id' in element.attrib}
     for path in DOCS.rglob('*.css'):
         sources[path] = set(CSS_LINK.findall(path.read_text(encoding='utf-8')))
 
@@ -47,7 +51,7 @@ def check():
                 target /= 'index.html'
             if not target.is_file() or not target.resolve().is_relative_to(DOCS):
                 errors.append(f'{source.relative_to(DOCS)}: missing target {value}')
-            elif url.fragment and target in pages and unquote(url.fragment) not in pages[target].targets:
+            elif url.fragment and target in targets and unquote(url.fragment) not in targets[target]:
                 errors.append(f'{source.relative_to(DOCS)}: missing fragment {value}')
     if errors:
         raise SystemExit('\n'.join(errors))

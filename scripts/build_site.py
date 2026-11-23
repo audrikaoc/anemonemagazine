@@ -5,6 +5,7 @@ import json
 import re
 from html import escape
 from pathlib import Path
+from xml.etree import ElementTree
 from xml.sax.saxutils import escape as xml_escape
 
 ROOT = Path(__file__).resolve().parents[1]
@@ -19,11 +20,12 @@ PAGES = {
     'submissions': ('Submission guidelines', 'Submit fiction, nonfiction, poetry, art, or photography to Anemone Magazine.'),
     'upcoming-issues': ('Calls for work', 'Find Anemone’s upcoming issues, submission deadlines, and staff applications.'),
     'writingworkshops': ('Writing workshops', 'Join Anemone’s free writing workshops or apply to volunteer as a mentor.'),
+    'reach': ('Our reach', 'Explore a country-level map of Anemone Magazine’s contributors and readers.'),
     'masthead': ('Masthead', 'Meet the editors and creative team behind Anemone Magazine.'),
     'faqs': ('Frequently asked questions', 'Find answers to common questions about submitting to Anemone Magazine.'),
     'privacy-policy': ('Privacy policy', 'Learn how Anemone Magazine handles contributor information.'),
 }
-NAVIGATION = {'issues': 'Issues', 'writingworkshops': 'Workshops', 'masthead': 'Masthead'}
+NAVIGATION = {'issues': 'Issues', 'writingworkshops': 'Workshops', 'masthead': 'Masthead', 'reach': 'Reach'}
 
 
 def substitute(template, values):
@@ -54,6 +56,42 @@ def issue_cards(issues, root):
         f'<span class="issue-title">{escape(issue["title"])}</span></a>'
         for issue in issues
     )
+
+
+def reach_audiences(root):
+    data = json.loads((SOURCE / 'reach.json').read_text(encoding='utf-8'))
+    asset = 'assets/world-countries.svg'
+    map_svg = ElementTree.parse(OUTPUT / asset).getroot()
+    by_id = {element.get('id'): element for element in map_svg.iter() if 'id' in element.attrib}
+    names = {
+        key.removeprefix('country-'): element.findtext('{*}title')
+        for key, element in by_id.items() if key.startswith('country-')
+    }
+    panels = []
+    for audience, title in [('contributors', 'Contributor countries'), ('readers', 'Reader countries')]:
+        detail = data[audience]
+        codes = set(detail['countries'])
+        if missing := codes - names.keys():
+            raise ValueError(f'Unknown {audience} country codes: {", ".join(sorted(missing))}')
+        ordered = sorted(codes, key=names.get)
+        highlights = ''.join(f'<use href="{root}{asset}#country-{code}"/>' for code in ordered)
+        markers = ''.join(f'<use href="{root}{asset}#marker-{code}"/>' for code in ordered if f'marker-{code}' in by_id)
+        countries = ''
+        if ordered:
+            items = ''.join(f'<li>{escape(names[code])}</li>' for code in ordered)
+            countries = f'\n      <ul class="reach-countries" aria-label="Countries shown">{items}</ul>'
+        panels.append(f'''<section class="reach-panel reach-{audience}" aria-labelledby="{audience}-title">
+      <svg class="reach-map" viewBox="{map_svg.attrib['viewBox']}" aria-hidden="true" fill-rule="evenodd">
+        <use class="map-grid" href="{root}{asset}#world-graticule"/>
+        <use class="map-land" href="{root}{asset}#world-land"/>
+        <g class="map-highlight">{highlights}{markers}</g>
+      </svg>
+      <div class="reach-details">
+        <h2 id="{audience}-title">{title}</h2>
+        <p>{escape(detail['note'])}</p>{countries}
+      </div>
+    </section>''')
+    return '\n    '.join(panels)
 
 
 def team_cards(people, root):
@@ -170,6 +208,7 @@ def build():
             'general_issues': issue_cards((issue for issue in issues.values() if 'theme' not in issue), root) if slug == 'issues' else '',
             'themed_issues': issue_cards((issue for issue in issues.values() if 'theme' in issue), root) if slug == 'issues' else '',
             'team': team_cards(data['team'], root) if slug == 'masthead' else '',
+            'reach_audiences': reach_audiences(root) if slug == 'reach' else '',
         }
         render(slug, title, desc, substitute(template, keys))
 

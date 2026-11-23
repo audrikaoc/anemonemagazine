@@ -1,0 +1,10 @@
+{
+  "contributors": {
+    "countries": ["AU", "CN", "DE", "IN", "KZ", "NG", "RS", "GB", "US"],
+    "note": "Selected countries mentioned as home, place of origin, or place of residence in published contributor bios."
+  },
+  "readers": {
+    "countries": [],
+    "note": "Reader countries haven’t been published yet."
+  }
+}
