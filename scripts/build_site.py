@@ -8,6 +8,8 @@ from pathlib import Path
 from xml.etree import ElementTree
 from xml.sax.saxutils import escape as xml_escape
 
+from submission_calendar import CALENDAR_FILE, calendar_calls, deadline_preview, write_calendar
+
 ROOT = Path(__file__).resolve().parents[1]
 SOURCE = ROOT / 'site'
 OUTPUT = ROOT / 'docs'
@@ -18,7 +20,7 @@ PAGES = {
     '': ('Anemone Magazine | A place for your voice', 'An independent literary magazine publishing fiction, nonfiction, poetry, and art by young creators.'),
     'issues': ('Issue archive', 'Read past general and themed editions of Anemone Magazine.'),
     'submissions': ('Submission guidelines', 'Submit fiction, nonfiction, poetry, art, or photography to Anemone Magazine.'),
-    'upcoming-issues': ('Calls for work', 'Find Anemone’s upcoming issues, submission deadlines, and staff applications.'),
+    'upcoming-issues': ('Submission calendar', 'Find Anemone’s submission deadlines, upcoming themes, and staff applications.'),
     'writingworkshops': ('Writing workshops', 'Join Anemone’s free writing workshops or apply to volunteer as a mentor.'),
     'reach': ('Our reach', 'Explore a country-level map of Anemone Magazine’s contributors and readers.'),
     'masthead': ('Masthead', 'Meet the editors and creative team behind Anemone Magazine.'),
@@ -190,6 +192,9 @@ def write_page(path, html):
 
 def build():
     data = json.loads((SOURCE / 'magazine.json').read_text(encoding='utf-8'))
+    schedule = json.loads((SOURCE / 'submission-calendar.json').read_text(encoding='utf-8'))
+    calls = calendar_calls(schedule['calls'], data['instagram'])
+    has_calendar = write_calendar(schedule, OUTPUT, DOMAIN)
     layout = (SOURCE / 'layout.html').read_text(encoding='utf-8')
     issues = {issue['slug']: issue for issue in data['issues']}
     issue_series = {
@@ -250,6 +255,9 @@ def build():
     for slug, (title, desc) in PAGES.items():
         root = '../' if slug else './'
         template = (SOURCE / 'pages' / f'{slug or "home"}.html').read_text(encoding='utf-8')
+        download = ''
+        if slug == 'upcoming-issues' and has_calendar:
+            download = f'\n      <a class="button" href="{root}{CALENDAR_FILE}" download>Download deadlines (.ics)</a>'
         keys = {
             **external_links,
             'root': root,
@@ -261,6 +269,9 @@ def build():
             'reach_audiences': reach_audiences(root) if slug == 'reach' else '',
             'page_artwork': artwork(page_artwork[slug], root, 'page-art') if slug in page_artwork else '',
             'mission_artwork': artwork('anemone-engraving.jpg', root, 'mission-art', lazy=True) if not slug else '',
+            'deadline_preview': deadline_preview(schedule['calls'], root) if not slug else '',
+            'calendar_calls': calls,
+            'calendar_download': download,
         }
         render(slug, title, desc, substitute(template, keys))
 

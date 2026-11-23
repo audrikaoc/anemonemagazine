@@ -6,7 +6,8 @@ An independent literary magazine publishing fiction, nonfiction, poetry, and art
 
 - Update issue metadata, cover filenames, workshops, and Google form links in `site/magazine.json`.
 - Keep general and themed issues in newest-to-oldest order within each series in `site/magazine.json`. End each published issue’s date with its four-digit year to include it in the corresponding archive filter. Issue pages use the series order for their newer and older links.
-- Update page copy in `site/pages/`. The submission dates and issue call are in `site/pages/upcoming-issues.html`.
+- Update page copy in `site/pages/`. Update calls and dates in `site/submission-calendar.json` and record the edit date in `updated`. Use `YYYY-MM-DD` for published dates and omit dates that are still to be announced. The build generates the calendar download and the homepage deadline from that same file.
+- Edit the downloadable Word manuscript template in `docs/assets/downloads/anemone-manuscript-template.docx` when the submission formatting guidelines change.
 - Keep site assets in `docs/assets/`. Issue covers belong in `docs/assets/covers/`.
 - Run the following with Python 3.9 or later. Commit both the source edits and regenerated files in `docs/`.
 
