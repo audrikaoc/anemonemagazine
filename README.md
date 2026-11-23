@@ -28,7 +28,6 @@ GitHub runs the internal link checker and checks that the generated pages match 
 
 - Publish a Google Form with one required short-answer email question and set its response validation to email format. Give anyone with the link responder access. Keep **Collect email addresses**, **Limit to 1 response**, and **View results summary** off. [Google Forms publishing guide](https://support.google.com/docs/answer/2839588)
 - Use **Pre-fill form** with `sample@example.com` to find the question name in the link, such as `entry.123456789`. Set `newsletter_google_form` in `site/magazine.json` to an object with `url` set to the full public `/viewform` URL and `email_field` set to the question name. Rebuild and confirm a test signup appears in the form’s Responses tab. [Google Forms response guide](https://support.google.com/docs/answer/139706)
-- With `newsletter_google_form` set to `null`, the homepage uses the Squarespace link in `newsletter_signup`.
 
 ## Update the Reach page
 

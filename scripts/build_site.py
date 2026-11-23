@@ -90,13 +90,7 @@ def issue_cards(issues, root, *, filterable=False):
 
 
 def newsletter_signup(data):
-    form = data.get('newsletter_google_form')
-    if form is None:
-        return f'''<div>
-      <a class="button" href="{escape(data['newsletter_signup'])}">Sign up with email</a>
-      <p class="small">Opens our signup form on Squarespace.</p>
-    </div>'''
-
+    form = data['newsletter_google_form']
     url = form['url']
     email_field = form['email_field']
     if not re.fullmatch(r'https://docs\.google\.com/forms/d/e/[A-Za-z0-9_-]+/viewform', url):
