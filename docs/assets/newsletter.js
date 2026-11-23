@@ -1,6 +1,23 @@
 const newsletterForm = document.querySelector('.newsletter-form');
+const newsletterEmail = document.querySelector('#newsletter-email');
 const newsletterStatus = document.querySelector('#newsletter-status');
 const newsletterButton = newsletterForm.querySelector('button[type="submit"]');
+
+newsletterEmail.addEventListener('invalid', (event) => {
+  event.preventDefault();
+  newsletterEmail.setAttribute('aria-invalid', 'true');
+  newsletterStatus.dataset.state = 'error';
+  newsletterStatus.textContent = newsletterEmail.validity.valueMissing
+    ? 'Enter your email address.'
+    : 'Enter a valid email address, such as reader@example.com.';
+  newsletterEmail.focus();
+});
+
+newsletterEmail.addEventListener('input', () => {
+  newsletterEmail.removeAttribute('aria-invalid');
+  newsletterStatus.removeAttribute('data-state');
+  newsletterStatus.textContent = '';
+});
 
 newsletterForm.addEventListener('submit', async (event) => {
   event.preventDefault();
@@ -10,6 +27,7 @@ newsletterForm.addEventListener('submit', async (event) => {
   const controller = new AbortController();
   const timeout = setTimeout(() => controller.abort(), 15000);
   newsletterButton.disabled = true;
+  newsletterEmail.readOnly = true;
   newsletterStatus.removeAttribute('data-state');
   newsletterStatus.textContent = 'Submitting your signup…';
 
@@ -30,5 +48,6 @@ newsletterForm.addEventListener('submit', async (event) => {
   } finally {
     clearTimeout(timeout);
     newsletterButton.disabled = false;
+    newsletterEmail.readOnly = false;
   }
 });

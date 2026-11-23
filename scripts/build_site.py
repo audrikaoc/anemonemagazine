@@ -98,10 +98,15 @@ def newsletter_signup(data):
     if not re.fullmatch(r'entry\.[0-9]+|emailAddress', email_field):
         raise ValueError('Use the Google Forms email field name for newsletter_google_form.email_field')
     action = url.removesuffix('/viewform') + '/formResponse'
+    # Extend the browser's email check with SMTP length limits and dot placement.
+    email_pattern = (
+        r'(?=.{1,254}$)(?=[^@]{1,64}@)'
+        r'[^.\s@]+(?:\.[^.\s@]+)*@[^.\s@]+(?:\.[^.\s@]+)+'
+    )
     return f'''<form class="newsletter-form" action="{action}" method="post" target="_blank" rel="noopener" aria-labelledby="newsletter">
       <label for="newsletter-email">Email address</label>
       <div class="newsletter-fields">
-        <input id="newsletter-email" name="{email_field}" type="email" autocomplete="email" required>
+        <input id="newsletter-email" name="{email_field}" type="email" autocomplete="email" pattern="{email_pattern}" aria-describedby="newsletter-status" required>
         <button class="button" type="submit">Subscribe</button>
       </div>
       <p class="small" id="newsletter-status" role="status"></p>
