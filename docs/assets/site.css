@@ -70,6 +70,10 @@ p:last-child { margin-bottom: 0; }
 .hero-art { overflow: hidden; aspect-ratio: 5 / 4; background: var(--green); }
 .hero-art img { width: 100%; height: 100%; object-fit: cover; object-position: 63% center; }
 .section { padding-bottom: clamp(3rem, 6vw, 6rem); }
+.mission-inner { display: grid; grid-template-columns: minmax(0, .75fr) minmax(0, 1.25fr); gap: 1rem 2rem; padding-block: clamp(1.5rem, 3vw, 2.75rem); border-block: 1px solid var(--rule); }
+.mission-inner p { max-width: 58ch; font-size: clamp(1.075rem, 1.5vw, 1.25rem); }
+.mission.section { padding-bottom: clamp(2rem, 4vw, 3.5rem); }
+.mission + .section .section-heading { border-top: 0; padding-top: 0; }
 .section-heading { display: flex; align-items: end; justify-content: space-between; gap: 1rem; margin-bottom: 1.45rem; padding-top: 1.6rem; border-top: 1px solid var(--rule); }
 .issue-grid { display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); gap: 2rem clamp(1rem, 2.7vw, 2.2rem); }
 .featured-grid { grid-template-columns: repeat(3, minmax(0, 1fr)); }
@@ -90,6 +94,9 @@ p:last-child { margin-bottom: 0; }
 .community-panel .button, .community-panel .text-link { margin-top: .3rem; }
 .community-submit { color: var(--paper); background: var(--green); }
 .community-workshops { background: var(--lilac); }
+.newsletter-panel { display: grid; grid-template-columns: minmax(0, 1fr) auto; align-items: center; gap: 1.25rem 2rem; padding: clamp(1.65rem, 4.1vw, 4rem); background: #e6e9dc; }
+.newsletter-panel h2 { margin-bottom: .6rem; }
+.newsletter-panel .small { margin-top: .5rem; color: var(--muted); }
 .page-heading { padding-block: clamp(3rem, 7vw, 7rem) clamp(2rem, 5vw, 4rem); }
 .page-heading > .text-link { display: inline-block; margin-top: 1.25rem; }
 .archive-group { padding-bottom: clamp(3rem, 5vw, 5rem); }
@@ -153,7 +160,7 @@ p:last-child { margin-bottom: 0; }
   .issue-grid:not(.featured-grid), .masthead-grid { grid-template-columns: repeat(2, minmax(0, 1fr)); }
 }
 @media (max-width: 600px) {
-  .hero, .community, .content-layout, .listing, .issue-detail, .footer-inner { grid-template-columns: 1fr; }
+  .hero, .community, .content-layout, .listing, .issue-detail, .footer-inner, .mission-inner, .newsletter-panel { grid-template-columns: 1fr; }
   .hero { padding-top: 2.1rem; gap: 1.85rem; }
   .hero-art { aspect-ratio: 4 / 3; }
   .section-heading { align-items: start; flex-direction: column; gap: .5rem; }

@@ -30,7 +30,7 @@ GitHub runs the internal link checker and checks that the generated pages match 
 
 - The 12 existing Canva readers and published covers are linked from individual issue pages. Issue 1 retains its contributor credits and table of contents. It and the July 2026 Pride issue need source files or fresh reading links from the editors.
 - The Issue 11 submission and staff application forms request Google sign-in. Workshop registration and mentor application use the original Google Forms, and the workshop menu uses the original Google Doc.
-- Newsletter sign-up previously ran through Squarespace. It can be added to this site once the magazine has a hosted signup form and has migrated its subscriber list.
+- The homepage newsletter button links directly to the existing form on the magazine’s built-in Squarespace domain. It depends on that form staying online. Before retiring Squarespace, replace `newsletter_signup` in `site/magazine.json` with the public signup URL for the new mailing list and regenerate the site.
 - The homepage flower image in `docs/assets/images/anemones.jpg` is an original image generated for the redesign. Issue covers are from the magazine’s public Canva readers. Font licenses are in `docs/assets/fonts/`.
 
 ### Homepage artwork
