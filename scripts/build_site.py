@@ -89,6 +89,31 @@ def issue_cards(issues, root, *, filterable=False):
     return '\n    '.join(cards)
 
 
+def newsletter_signup(data):
+    form = data.get('newsletter_google_form')
+    if form is None:
+        return f'''<div>
+      <a class="button" href="{escape(data['newsletter_signup'])}">Sign up with email</a>
+      <p class="small">Opens our signup form on Squarespace.</p>
+    </div>'''
+
+    url = form['url']
+    email_field = form['email_field']
+    if not re.fullmatch(r'https://docs\.google\.com/forms/d/e/[A-Za-z0-9_-]+/viewform', url):
+        raise ValueError('Use the full public responder URL for newsletter_google_form.url')
+    if not re.fullmatch(r'entry\.[0-9]+|emailAddress', email_field):
+        raise ValueError('Use the Google Forms email field name for newsletter_google_form.email_field')
+    action = url.removesuffix('/viewform') + '/formResponse'
+    return f'''<form class="newsletter-form" action="{action}" method="post" aria-labelledby="newsletter">
+      <label for="newsletter-email">Email address</label>
+      <div class="newsletter-fields">
+        <input id="newsletter-email" name="{email_field}" type="email" autocomplete="email" aria-describedby="newsletter-confirmation" required>
+        <button class="button" type="submit">Subscribe</button>
+      </div>
+      <p class="small" id="newsletter-confirmation">Google Forms will show your signup confirmation.</p>
+    </form>'''
+
+
 def pick_cards(picks, root, heading_level):
     return '\n    '.join(
         f'<a class="pick-card" href="{root}editors-picks/{escape(pick["slug"])}/">'
@@ -419,6 +444,7 @@ def build():
             'page_artwork': artwork(page_artwork[slug], root, 'page-art') if slug in page_artwork else '',
             'mission_artwork': artwork('anemone-engraving.jpg', root, 'mission-art', lazy=True) if not slug else '',
             'deadline_preview': deadline_preview(schedule['calls'], root) if not slug else '',
+            'newsletter_signup_form': newsletter_signup(data) if not slug else '',
             'calendar_calls': calls,
             'calendar_download': download,
             'pick_spotlight': pick_spotlight(spotlight, root) if not slug and spotlight else '',

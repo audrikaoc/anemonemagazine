@@ -24,6 +24,12 @@ Visit `http://127.0.0.1:8017/` to preview. The local server serves fresh files o
 
 GitHub runs the internal link checker and checks that the generated pages match their source on each push and pull request.
 
+## Connect the newsletter signup
+
+- Publish a Google Form with one required short-answer email question and set its response validation to email format. Give anyone with the link responder access. Keep **Collect email addresses**, **Limit to 1 response**, and **View results summary** off. [Google Forms publishing guide](https://support.google.com/docs/answer/2839588)
+- Use **Pre-fill form** with `sample@example.com` to find the question name in the link, such as `entry.123456789`. Set `newsletter_google_form` in `site/magazine.json` to an object with `url` set to the full public `/viewform` URL and `email_field` set to the question name. Rebuild and confirm a test signup appears in the form’s Responses tab. [Google Forms response guide](https://support.google.com/docs/answer/139706)
+- With `newsletter_google_form` set to `null`, the homepage uses the Squarespace link in `newsletter_signup`.
+
 ## Update the Reach page
 
 - Update `site/reach.json` with public, aggregate country codes such as `AU`, `GB`, and `US`, then rebuild the site. The map highlights each listed country once.
@@ -43,7 +49,6 @@ GitHub runs the internal link checker and checks that the generated pages match 
 
 - The 12 existing Canva readers and published covers are linked from individual issue pages. Issue 1 retains its contributor credits and table of contents. It and the July 2026 Pride issue need source files or fresh reading links from the editors.
 - The Issue 11 submission and staff application forms request Google sign-in. Workshop registration and mentor application use the original Google Forms, and the workshop menu uses the original Google Doc.
-- The homepage newsletter button links directly to the existing form on the magazine’s built-in Squarespace domain. It depends on that form staying online. Before retiring Squarespace, replace `newsletter_signup` in `site/magazine.json` with the public signup URL for the new mailing list and regenerate the site.
 - The homepage flower image in `docs/assets/images/anemones-daylight.jpg` is an AI-edited version of the original image generated for the redesign. Issue covers are from the magazine’s public Canva readers. Font licenses are in `docs/assets/fonts/`.
 
 ### Homepage artwork
