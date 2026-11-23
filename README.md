@@ -15,10 +15,10 @@ An independent literary magazine publishing fiction, nonfiction, poetry, and art
 ```sh
 python3 scripts/build_site.py
 python3 scripts/check_links.py
-python3 -m http.server 8000 --bind 127.0.0.1 --directory docs
+python3 scripts/preview_site.py
 ```
 
-Visit `http://127.0.0.1:8000/` to preview.
+Visit `http://127.0.0.1:8017/` to preview. The local server serves fresh files on each reload.
 
 GitHub runs the internal link checker and checks that the generated pages match their source on each push and pull request.
 

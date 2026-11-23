@@ -3,6 +3,7 @@
 
 import json
 import re
+from hashlib import sha256
 from html import escape
 from pathlib import Path
 from xml.etree import ElementTree
@@ -251,6 +252,7 @@ def build():
     page_artwork = dict(data['page_artwork'])
     page_artwork.update({f'editors-picks/{pick["slug"]}': pick['artwork'] for pick in picks})
     external_links = {key: escape(value) for key, value in data.items() if isinstance(value, str)}
+    stylesheet_version = sha256((OUTPUT / 'assets' / 'site.css').read_bytes()).hexdigest()[:12]
     urls = []
 
     def render(slug, title, desc, body, *, redirect=None, page_missing=False):
@@ -291,6 +293,7 @@ def build():
             'description': escape(desc),
             'head': head,
             'social_image': DOMAIN + image,
+            'stylesheet_version': stylesheet_version,
             'navigation': navigation,
             'submission_current': ' aria-current="page"' if slug == 'submissions' else '',
             'body': body,
