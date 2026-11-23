@@ -58,13 +58,21 @@ def cover(issue, root, detail=False):
     return f'<div class="cover-stage fallback" aria-hidden="true"><span>{title}</span></div>'
 
 
-def issue_cards(issues, root):
-    return '\n    '.join(
-        f'<a class="issue-card" href="{root}{issue["slug"]}/">'
-        f'{cover(issue, root)}<span class="issue-meta">{escape(metadata(issue))}</span>'
-        f'<span class="issue-title">{escape(issue["title"])}</span></a>'
-        for issue in issues
-    )
+def publication_year(issue):
+    match = re.search(r'\b([0-9]{4})\s*$', issue['date'])
+    return match.group(1) if match else ''
+
+
+def issue_cards(issues, root, *, filterable=False):
+    cards = []
+    for issue in issues:
+        year = f' data-year="{publication_year(issue)}"' if filterable else ''
+        cards.append(
+            f'<a class="issue-card" href="{root}{issue["slug"]}/"{year}>'
+            f'{cover(issue, root)}<span class="issue-meta">{escape(metadata(issue))}</span>'
+            f'<span class="issue-title">{escape(issue["title"])}</span></a>'
+        )
+    return '\n    '.join(cards)
 
 
 def reach_audiences(root):
@@ -118,6 +126,28 @@ def team_cards(people, root):
     return '\n    '.join(cards)
 
 
+def issue_navigation(series, issues, index):
+    neighbors = []
+    if index > 0:
+        neighbors.append(('Newer issue', issues[index - 1]))
+    if index + 1 < len(issues):
+        neighbors.append(('Older issue', issues[index + 1]))
+    if not neighbors:
+        return ''
+    links = '\n    '.join(
+        f'<a href="../{escape(issue["slug"])}/">'
+        f'<span class="small">{label} · {escape(issue["date"])}</span>'
+        f'<span class="issue-neighbor-title">{escape(issue["title"])}</span></a>'
+        for label, issue in neighbors
+    )
+    return f'''
+<nav class="wrap section" aria-label="More {series} issues">
+  <div class="issue-neighbors">
+    {links}
+  </div>
+</nav>'''
+
+
 def issue_body(issue, default_artwork):
     title = escape(issue['title'])
     if reader := issue.get('reader'):
@@ -162,6 +192,11 @@ def build():
     data = json.loads((SOURCE / 'magazine.json').read_text(encoding='utf-8'))
     layout = (SOURCE / 'layout.html').read_text(encoding='utf-8')
     issues = {issue['slug']: issue for issue in data['issues']}
+    issue_series = {
+        'general': [issue for issue in issues.values() if 'theme' not in issue],
+        'themed': [issue for issue in issues.values() if 'theme' in issue],
+    }
+    years = sorted({publication_year(issue) for issue in issues.values()} - {''}, reverse=True)
     page_artwork = data['page_artwork']
     external_links = {key: escape(value) for key, value in data.items() if isinstance(value, str)}
     urls = []
@@ -219,8 +254,9 @@ def build():
             **external_links,
             'root': root,
             'featured_issues': issue_cards((issues[key] for key in data['featured']), root) if not slug else '',
-            'general_issues': issue_cards((issue for issue in issues.values() if 'theme' not in issue), root) if slug == 'issues' else '',
-            'themed_issues': issue_cards((issue for issue in issues.values() if 'theme' in issue), root) if slug == 'issues' else '',
+            'general_issues': issue_cards(issue_series['general'], root, filterable=True) if slug == 'issues' else '',
+            'themed_issues': issue_cards(issue_series['themed'], root, filterable=True) if slug == 'issues' else '',
+            'archive_years': '\n        '.join(f'<option>{escape(year)}</option>' for year in years),
             'team': team_cards(data['team'], root) if slug == 'masthead' else '',
             'reach_audiences': reach_audiences(root) if slug == 'reach' else '',
             'page_artwork': artwork(page_artwork[slug], root, 'page-art') if slug in page_artwork else '',
@@ -228,9 +264,10 @@ def build():
         }
         render(slug, title, desc, substitute(template, keys))
 
-    for issue in issues.values():
-        render(issue['slug'], issue['title'], f'{metadata(issue)} from Anemone Magazine.',
-               issue_body(issue, page_artwork['issues']))
+    for series, editions in issue_series.items():
+        for index, issue in enumerate(editions):
+            body = issue_body(issue, page_artwork['issues']) + issue_navigation(series, editions, index)
+            render(issue['slug'], issue['title'], f'{metadata(issue)} from Anemone Magazine.', body)
 
     for slug, (destination, message) in {
         'home': ('', 'Anemone Magazine'),

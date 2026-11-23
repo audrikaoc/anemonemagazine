@@ -37,26 +37,54 @@
   </div>
   <img class="page-art" src="../assets/images/anemone-pressed.jpg" alt="" width="960" height="640" decoding="async">
 </header>
-<section class="wrap archive-group" aria-labelledby="general">
+<div class="wrap archive-tools" hidden>
+  <form class="archive-filters" role="search" aria-label="Filter the issue archive">
+    <div>
+      <label for="archive-search">Search issues</label>
+      <input id="archive-search" name="query" type="search" placeholder="Try Pride or Issue 9" autocomplete="off">
+    </div>
+    <div>
+      <label for="archive-type">Issue type</label>
+      <select id="archive-type" name="type">
+        <option value="">All types</option>
+        <option value="general">General</option>
+        <option value="themed">Themed</option>
+      </select>
+    </div>
+    <div>
+      <label for="archive-year">Year</label>
+      <select id="archive-year" name="year">
+        <option value="">All years</option>
+        <option>2026</option>
+        <option>2025</option>
+        <option>2024</option>
+      </select>
+    </div>
+    <button class="button archive-reset" type="reset">Clear filters</button>
+  </form>
+  <p class="archive-status" role="status"></p>
+</div>
+<section class="wrap archive-group" data-issue-group="general" aria-labelledby="general">
   <h2 id="general">General issues</h2>
-  <div class="issue-grid"><a class="issue-card" href="../issue-9/"><div class="cover-stage"><img src="../assets/covers/issue-9.jpg" alt="" loading="lazy" decoding="async"></div><span class="issue-meta">General issue · 2026</span><span class="issue-title">Issue 9</span></a>
-    <a class="issue-card" href="../issue-8/"><div class="cover-stage"><img src="../assets/covers/issue-8.jpg" alt="" loading="lazy" decoding="async"></div><span class="issue-meta">General issue · Summer 2026</span><span class="issue-title">Issue 8</span></a>
-    <a class="issue-card" href="../issue-7/"><div class="cover-stage"><img src="../assets/covers/issue-7.jpg" alt="" loading="lazy" decoding="async"></div><span class="issue-meta">General issue · Spring 2026</span><span class="issue-title">Issue 7</span></a>
-    <a class="issue-card" href="../issue-6/"><div class="cover-stage"><img src="../assets/covers/issue-6.jpg" alt="" loading="lazy" decoding="async"></div><span class="issue-meta">General issue · Winter 2025</span><span class="issue-title">Issue 6</span></a>
-    <a class="issue-card" href="../issue-5/"><div class="cover-stage"><img src="../assets/covers/issue-5.jpg" alt="" loading="lazy" decoding="async"></div><span class="issue-meta">General issue · Fall 2025</span><span class="issue-title">Issue 5</span></a>
-    <a class="issue-card" href="../issue-4/"><div class="cover-stage"><img src="../assets/covers/issue-4.jpg" alt="" loading="lazy" decoding="async"></div><span class="issue-meta">General issue · Summer 2025</span><span class="issue-title">Issue 4</span></a>
-    <a class="issue-card" href="../issue-3/"><div class="cover-stage"><img src="../assets/covers/issue-3.jpg" alt="" loading="lazy" decoding="async"></div><span class="issue-meta">General issue · Spring 2025</span><span class="issue-title">Issue 3</span></a>
-    <a class="issue-card" href="../issue-2/"><div class="cover-stage"><img src="../assets/covers/issue-2.jpg" alt="" loading="lazy" decoding="async"></div><span class="issue-meta">General issue · Winter 2024</span><span class="issue-title">Issue 2</span></a>
-    <a class="issue-card" href="../issue-1/"><div class="cover-stage fallback" aria-hidden="true"><span>Issue 1</span></div><span class="issue-meta">General issue · Fall 2024</span><span class="issue-title">Issue 1</span></a></div>
+  <div class="issue-grid"><a class="issue-card" href="../issue-9/" data-year="2026"><div class="cover-stage"><img src="../assets/covers/issue-9.jpg" alt="" loading="lazy" decoding="async"></div><span class="issue-meta">General issue · 2026</span><span class="issue-title">Issue 9</span></a>
+    <a class="issue-card" href="../issue-8/" data-year="2026"><div class="cover-stage"><img src="../assets/covers/issue-8.jpg" alt="" loading="lazy" decoding="async"></div><span class="issue-meta">General issue · Summer 2026</span><span class="issue-title">Issue 8</span></a>
+    <a class="issue-card" href="../issue-7/" data-year="2026"><div class="cover-stage"><img src="../assets/covers/issue-7.jpg" alt="" loading="lazy" decoding="async"></div><span class="issue-meta">General issue · Spring 2026</span><span class="issue-title">Issue 7</span></a>
+    <a class="issue-card" href="../issue-6/" data-year="2025"><div class="cover-stage"><img src="../assets/covers/issue-6.jpg" alt="" loading="lazy" decoding="async"></div><span class="issue-meta">General issue · Winter 2025</span><span class="issue-title">Issue 6</span></a>
+    <a class="issue-card" href="../issue-5/" data-year="2025"><div class="cover-stage"><img src="../assets/covers/issue-5.jpg" alt="" loading="lazy" decoding="async"></div><span class="issue-meta">General issue · Fall 2025</span><span class="issue-title">Issue 5</span></a>
+    <a class="issue-card" href="../issue-4/" data-year="2025"><div class="cover-stage"><img src="../assets/covers/issue-4.jpg" alt="" loading="lazy" decoding="async"></div><span class="issue-meta">General issue · Summer 2025</span><span class="issue-title">Issue 4</span></a>
+    <a class="issue-card" href="../issue-3/" data-year="2025"><div class="cover-stage"><img src="../assets/covers/issue-3.jpg" alt="" loading="lazy" decoding="async"></div><span class="issue-meta">General issue · Spring 2025</span><span class="issue-title">Issue 3</span></a>
+    <a class="issue-card" href="../issue-2/" data-year="2024"><div class="cover-stage"><img src="../assets/covers/issue-2.jpg" alt="" loading="lazy" decoding="async"></div><span class="issue-meta">General issue · Winter 2024</span><span class="issue-title">Issue 2</span></a>
+    <a class="issue-card" href="../issue-1/" data-year="2024"><div class="cover-stage fallback" aria-hidden="true"><span>Issue 1</span></div><span class="issue-meta">General issue · Fall 2024</span><span class="issue-title">Issue 1</span></a></div>
 </section>
-<section class="wrap archive-group" aria-labelledby="themed">
+<section class="wrap archive-group" data-issue-group="themed" aria-labelledby="themed">
   <h2 id="themed">Themed issues</h2>
-  <div class="issue-grid"><a class="issue-card" href="../themed-issue-5/"><div class="cover-stage fallback" aria-hidden="true"><span>Pride</span></div><span class="issue-meta">Themed Issue 5 · July 2026</span><span class="issue-title">Pride</span></a>
-    <a class="issue-card" href="../themed-issue-4/"><div class="cover-stage"><img src="../assets/covers/themed-issue-4.jpg" alt="" loading="lazy" decoding="async"></div><span class="issue-meta">Themed Issue 4 · Spring 2026</span><span class="issue-title">All Hearts Lead to Rome</span></a>
-    <a class="issue-card" href="../themedissue3/"><div class="cover-stage"><img src="../assets/covers/themedissue3.jpg" alt="" loading="lazy" decoding="async"></div><span class="issue-meta">Themed Issue 3 · Winter 2025</span><span class="issue-title">Old Leaf, New Leaf</span></a>
-    <a class="issue-card" href="../themedissue2/"><div class="cover-stage"><img src="../assets/covers/themedissue2.jpg" alt="" loading="lazy" decoding="async"></div><span class="issue-meta">Themed Issue 2 · Fall 2025</span><span class="issue-title">Halloween</span></a>
-    <a class="issue-card" href="../themedissue1/"><div class="cover-stage"><img src="../assets/covers/themedissue1.jpg" alt="" loading="lazy" decoding="async"></div><span class="issue-meta">Themed Issue 1 · June 2025</span><span class="issue-title">Pride</span></a></div>
+  <div class="issue-grid"><a class="issue-card" href="../themed-issue-5/" data-year="2026"><div class="cover-stage fallback" aria-hidden="true"><span>Pride</span></div><span class="issue-meta">Themed Issue 5 · July 2026</span><span class="issue-title">Pride</span></a>
+    <a class="issue-card" href="../themed-issue-4/" data-year="2026"><div class="cover-stage"><img src="../assets/covers/themed-issue-4.jpg" alt="" loading="lazy" decoding="async"></div><span class="issue-meta">Themed Issue 4 · Spring 2026</span><span class="issue-title">All Hearts Lead to Rome</span></a>
+    <a class="issue-card" href="../themedissue3/" data-year="2025"><div class="cover-stage"><img src="../assets/covers/themedissue3.jpg" alt="" loading="lazy" decoding="async"></div><span class="issue-meta">Themed Issue 3 · Winter 2025</span><span class="issue-title">Old Leaf, New Leaf</span></a>
+    <a class="issue-card" href="../themedissue2/" data-year="2025"><div class="cover-stage"><img src="../assets/covers/themedissue2.jpg" alt="" loading="lazy" decoding="async"></div><span class="issue-meta">Themed Issue 2 · Fall 2025</span><span class="issue-title">Halloween</span></a>
+    <a class="issue-card" href="../themedissue1/" data-year="2025"><div class="cover-stage"><img src="../assets/covers/themedissue1.jpg" alt="" loading="lazy" decoding="async"></div><span class="issue-meta">Themed Issue 1 · June 2025</span><span class="issue-title">Pride</span></a></div>
 </section>
+<script src="../assets/archive.js" defer></script>
 
   </main>
   <footer class="site-footer">

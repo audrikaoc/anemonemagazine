@@ -5,6 +5,7 @@ An independent literary magazine publishing fiction, nonfiction, poetry, and art
 ## Edit and preview
 
 - Update issue metadata, cover filenames, workshops, and Google form links in `site/magazine.json`.
+- Keep general and themed issues in newest-to-oldest order within each series in `site/magazine.json`. End each published issue’s date with its four-digit year to include it in the corresponding archive filter. Issue pages use the series order for their newer and older links.
 - Update page copy in `site/pages/`. The submission dates and issue call are in `site/pages/upcoming-issues.html`.
 - Keep site assets in `docs/assets/`. Issue covers belong in `docs/assets/covers/`.
 - Run the following with Python 3.9 or later. Commit both the source edits and regenerated files in `docs/`.

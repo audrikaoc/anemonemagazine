@@ -103,6 +103,14 @@ p:last-child { margin-bottom: 0; }
 .page-heading-art h1 { font-size: clamp(3.5rem, 7vw, 7.4rem); }
 .page-intro > .text-link { display: inline-block; margin-top: 1.25rem; }
 .page-art { width: 100%; aspect-ratio: 3 / 2; object-fit: cover; background: #e6e9dc; }
+.archive-tools[hidden], .archive-group[hidden], .issue-card[hidden], .archive-jumps[hidden] { display: none; }
+.archive-filters { display: grid; grid-template-columns: minmax(0, 2fr) minmax(0, 1fr) minmax(0, .75fr) auto; gap: .75rem; align-items: end; padding: clamp(1rem, 3vw, 1.6rem); background: #e6e9dc; }
+.archive-filters label { display: block; margin-bottom: .3rem; font-weight: 650; }
+.archive-filters input, .archive-filters select { width: 100%; min-height: 2.9rem; padding: .5rem .7rem; border: 1px solid #929a87; border-radius: 0; background: var(--paper); color: var(--ink); font: inherit; }
+.archive-filters select { appearance: none; padding-right: 2rem; background-image: linear-gradient(45deg, transparent 50%, var(--green) 50%), linear-gradient(135deg, var(--green) 50%, transparent 50%); background-position: right .95rem center, right .7rem center; background-size: .25rem .25rem; background-repeat: no-repeat; }
+.archive-reset { background: transparent; color: var(--green); font: inherit; font-weight: 650; cursor: pointer; }
+.archive-reset:hover { color: white; }
+.archive-status { min-height: 1.6rem; margin: .75rem 0 1rem; color: var(--muted); }
 .archive-group { padding-bottom: clamp(3rem, 5vw, 5rem); }
 .archive-group h2 { margin-bottom: 1.5rem; padding-top: 1.35rem; border-top: 1px solid var(--rule); scroll-margin-top: 1.5rem; }
 .archive-group .issue-title { font-size: clamp(1.8rem, 2.6vw, 2.5rem); }
@@ -124,6 +132,11 @@ p:last-child { margin-bottom: 0; }
 .listing h2 { font-size: clamp(2.3rem, 4vw, 3.8rem); }
 .listing > div:last-child { max-width: 60ch; }
 .listing .small { margin-top: .55rem; color: var(--muted); }
+.prompt-section h2 { scroll-margin-top: 1.5rem; }
+.prompt-grid { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 1rem; }
+.prompt-card { padding: clamp(1.25rem, 3vw, 2rem); background: #eeeee3; }
+.prompt-card:nth-child(even) { background: var(--lilac); }
+.prompt-card h3 { margin-bottom: .65rem; }
 .faq-list { max-width: 70rem; margin-left: max(0px, calc((100% - 88rem) / 2)); padding-bottom: 4rem; }
 .faq-list details { border-top: 1px solid var(--rule); padding-block: .85rem; }
 .faq-list summary { cursor: pointer; font-weight: 700; }
@@ -164,6 +177,11 @@ p:last-child { margin-bottom: 0; }
 .issue-contents ul { margin: .5rem 0 0; }
 .issue-contents li span { color: var(--muted); }
 .issue-contents li span::before { content: '· '; }
+.issue-neighbors { display: grid; grid-template-columns: repeat(auto-fit, minmax(min(100%, 16rem), 1fr)); gap: .75rem; padding-top: 1.25rem; border-top: 1px solid var(--rule); }
+.issue-neighbors a { display: flex; flex-direction: column; gap: .3rem; padding: 1rem 1.25rem; background: #eeeee3; text-decoration: none; }
+.issue-neighbors a:hover .issue-neighbor-title { text-decoration: underline; }
+.issue-neighbors .small { color: var(--muted); }
+.issue-neighbor-title { font: 2rem/1 var(--serif); }
 .listing-note { margin-top: 1.1rem; }
 .masthead-grid { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 1.6rem; }
 .person { border-top: 1px solid var(--rule); padding-top: 1.35rem; }
@@ -190,7 +208,7 @@ p:last-child { margin-bottom: 0; }
   .issue-grid:not(.featured-grid), .masthead-grid { grid-template-columns: repeat(2, minmax(0, 1fr)); }
 }
 @media (max-width: 600px) {
-  .hero, .community, .content-layout, .listing, .issue-detail, .footer-inner, .mission-inner, .newsletter-panel, .page-heading-art { grid-template-columns: 1fr; }
+  .hero, .community, .content-layout, .listing, .issue-detail, .footer-inner, .mission-inner, .newsletter-panel, .page-heading-art, .prompt-grid { grid-template-columns: 1fr; }
   .hero { padding-top: 2.1rem; gap: 1.85rem; }
   .hero-art { aspect-ratio: 4 / 3; }
   .section-heading { align-items: start; flex-direction: column; gap: .5rem; }
@@ -200,6 +218,9 @@ p:last-child { margin-bottom: 0; }
   .issue-card .cover-stage { padding: .75rem; }
   .issue-detail { grid-template-areas: 'intro' 'cover' 'art'; grid-template-rows: auto; }
   .page-art { aspect-ratio: 16 / 9; }
+  .archive-filters { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+  .archive-filters > div:first-child { grid-column: 1 / -1; }
+  .archive-reset { grid-column: 1 / -1; justify-self: start; }
   .community-panel { padding: 1.65rem; }
 }
 @media (max-width: 350px) {
