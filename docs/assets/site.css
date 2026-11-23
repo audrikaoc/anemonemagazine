@@ -79,6 +79,13 @@ p:last-child { margin-bottom: 0; }
 .section-heading { display: flex; align-items: end; justify-content: space-between; gap: 1rem; margin-bottom: 1.45rem; padding-top: 1.6rem; border-top: 1px solid var(--rule); }
 .issue-grid { display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); gap: 2rem clamp(1rem, 2.7vw, 2.2rem); }
 .featured-grid { grid-template-columns: repeat(3, minmax(0, 1fr)); }
+.pick-grid { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: clamp(1rem, 2.5vw, 2rem); }
+.pick-card { display: grid; grid-template-rows: auto 1fr; border: 1px solid var(--rule); text-decoration: none; }
+.pick-image { width: 100%; aspect-ratio: 16 / 9; object-fit: cover; background: #e6e9dc; }
+.pick-copy { padding: clamp(1rem, 2.5vw, 1.65rem); }
+.pick-copy h2, .pick-copy h3 { font-size: clamp(2.1rem, 3.2vw, 3rem); }
+.pick-card:hover :is(h2, h3), .pick-card:focus-visible :is(h2, h3) { text-decoration: underline; text-underline-offset: .12em; }
+.pick-byline { margin-block: .55rem .7rem; color: var(--muted); font-weight: 650; }
 .issue-card { display: block; text-decoration: none; }
 .issue-card:focus-visible .issue-title, .issue-card:hover .issue-title { text-decoration: underline; }
 .cover-stage { display: grid; place-items: center; overflow: hidden; aspect-ratio: 1.08; padding: clamp(.75rem, 2.2vw, 1.8rem); background: #e6e9dc; }
@@ -104,6 +111,13 @@ p:last-child { margin-bottom: 0; }
 .page-heading-art h1 { font-size: clamp(3.5rem, 7vw, 7.4rem); }
 .page-intro > .text-link { display: inline-block; margin-top: 1.25rem; }
 .page-art { width: 100%; aspect-ratio: 3 / 2; object-fit: cover; background: #e6e9dc; }
+.pick-back { margin-bottom: 1.2rem; }
+.pick-article .page-intro > .pick-back { margin-top: 0; }
+.pick-article p.pick-byline { font-size: 1.1rem; }
+.pick-issue-page { margin-top: .65rem; color: var(--muted); }
+.pick-reading { padding-bottom: clamp(2.5rem, 6vw, 6rem); }
+.pick-excerpt { margin: 0; padding: clamp(1rem, 3vw, 1.7rem); border-left: .2rem solid var(--accent); background: #eeeee3; }
+.pick-excerpt p { font: clamp(1.85rem, 4vw, 2.6rem)/1.15 var(--serif); white-space: pre-line; }
 .archive-tools[hidden], .archive-group[hidden], .issue-card[hidden], .archive-jumps[hidden] { display: none; }
 .archive-filters { display: grid; grid-template-columns: minmax(0, 2fr) minmax(0, 1fr) minmax(0, .75fr) auto; gap: .75rem; align-items: end; padding: clamp(1rem, 3vw, 1.6rem); background: #e6e9dc; }
 .archive-filters label { display: block; margin-bottom: .3rem; font-weight: 650; }
@@ -220,6 +234,7 @@ p:last-child { margin-bottom: 0; }
   .hero-art { aspect-ratio: 4 / 5; }
   .hero-art img { object-position: 80% center; }
   .issue-grid:not(.featured-grid), .masthead-grid { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+  .pick-grid { grid-template-columns: repeat(2, minmax(0, 1fr)); }
 }
 @media (max-width: 600px) {
   .hero, .community, .content-layout, .listing, .issue-detail, .footer-inner, .mission-inner, .newsletter-panel, .page-heading-art, .prompt-grid { grid-template-columns: 1fr; }
@@ -229,6 +244,7 @@ p:last-child { margin-bottom: 0; }
   .mission-title { display: flex; align-items: center; justify-content: space-between; gap: .75rem; }
   .mission-art { width: 30%; margin-top: 0; aspect-ratio: 2 / 1; }
   .featured-grid { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+  .pick-grid { grid-template-columns: 1fr; }
   .issue-card .cover-stage { padding: .75rem; }
   .issue-detail { grid-template-areas: 'intro' 'cover' 'art'; grid-template-rows: auto; }
   .page-art { aspect-ratio: 16 / 9; }

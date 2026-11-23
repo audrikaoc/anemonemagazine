@@ -19,6 +19,7 @@ PLACEHOLDER = re.compile(r'{{(\w+)}}')
 PAGES = {
     '': ('Anemone Magazine | A place for your voice', 'An independent literary magazine publishing fiction, nonfiction, poetry, and art by young creators.'),
     'issues': ('Issue archive', 'Read past general and themed editions of Anemone Magazine.'),
+    'editors-picks': ('Editor’s Picks', 'Discover selected fiction, poetry, and essays from the Anemone Magazine archive.'),
     'submissions': ('Submission guidelines', 'Submit fiction, nonfiction, poetry, art, or photography to Anemone Magazine.'),
     'upcoming-issues': ('Submission calendar', 'Find Anemone’s submission deadlines, upcoming themes, and staff applications.'),
     'writingworkshops': ('Writing workshops', 'Join Anemone’s free writing workshops or apply to volunteer as a mentor.'),
@@ -32,6 +33,10 @@ NAVIGATION = {'issues': 'Issues', 'writingworkshops': 'Workshops', 'masthead': '
 
 def substitute(template, values):
     return PLACEHOLDER.sub(lambda match: values[match[1]], template)
+
+
+def relative_root(slug):
+    return '../' * (slug.count('/') + 1) if slug else './'
 
 
 def metadata(issue):
@@ -75,6 +80,46 @@ def issue_cards(issues, root, *, filterable=False):
             f'<span class="issue-title">{escape(issue["title"])}</span></a>'
         )
     return '\n    '.join(cards)
+
+
+def pick_cards(picks, root, heading_level):
+    return '\n    '.join(
+        f'<a class="pick-card" href="{root}editors-picks/{escape(pick["slug"])}/">'
+        f'{artwork(pick["artwork"], root, "pick-image", lazy=True)}'
+        f'<div class="pick-copy"><p class="eyebrow">{escape(pick["genre"])}</p>'
+        f'<h{heading_level}>{escape(pick["title"])}</h{heading_level}>'
+        f'<p class="pick-byline">By {escape(pick["author"])}</p>'
+        f'<p>{escape(pick["summary"])}</p></div></a>'
+        for pick in picks
+    )
+
+
+def pick_body(pick, issue, root):
+    title = escape(pick['title'])
+    reader = escape(pick['reader'])
+    return f'''<article class="wrap pick-article">
+  <header class="page-heading page-heading-art">
+    <div class="page-intro">
+      <a class="pick-back text-link" href="{root}editors-picks/">All Editor’s Picks</a>
+      <p class="eyebrow">{escape(pick['genre'])}</p>
+      <h1>{title}</h1>
+      <p class="pick-byline">By {escape(pick['author'])}</p>
+      <p class="lede">{escape(pick['summary'])}</p>
+      <div class="actions">
+        <a class="button" href="{reader}">Read the full piece</a>
+        <a class="text-link" href="{root}{escape(issue['slug'])}/">View {escape(issue['title'])}</a>
+      </div>
+      <p class="pick-issue-page small">Page {pick['page']} in the issue.</p>
+    </div>
+    {artwork(pick['artwork'], root, 'page-art')}
+  </header>
+  <div class="pick-reading prose">
+    <h2>Excerpt</h2>
+    <blockquote class="pick-excerpt" cite="{reader}"><p>{escape(pick['excerpt'])}</p></blockquote>
+    <h2>Why we picked it</h2>
+    <p>{escape(pick['note'])}</p>
+  </div>
+</article>'''
 
 
 def reach_audiences(root):
@@ -192,6 +237,7 @@ def write_page(path, html):
 
 def build():
     data = json.loads((SOURCE / 'magazine.json').read_text(encoding='utf-8'))
+    picks = json.loads((SOURCE / 'editors-picks.json').read_text(encoding='utf-8'))
     schedule = json.loads((SOURCE / 'submission-calendar.json').read_text(encoding='utf-8'))
     calls = calendar_calls(schedule['calls'], data['instagram'])
     has_calendar = write_calendar(schedule, OUTPUT, DOMAIN)
@@ -202,12 +248,13 @@ def build():
         'themed': [issue for issue in issues.values() if 'theme' in issue],
     }
     years = sorted({publication_year(issue) for issue in issues.values()} - {''}, reverse=True)
-    page_artwork = data['page_artwork']
+    page_artwork = dict(data['page_artwork'])
+    page_artwork.update({f'editors-picks/{pick["slug"]}': pick['artwork'] for pick in picks})
     external_links = {key: escape(value) for key, value in data.items() if isinstance(value, str)}
     urls = []
 
     def render(slug, title, desc, body, *, redirect=None, page_missing=False):
-        root = './' if not slug else '../'
+        root = relative_root(slug)
         url = f'{DOMAIN}{slug}/' if slug else DOMAIN
         head = f'<link rel="canonical" href="{url}">\n  <meta property="og:url" content="{url}">'
         if redirect is not None:
@@ -253,11 +300,16 @@ def build():
         write_page(path, html)
 
     for slug, (title, desc) in PAGES.items():
-        root = '../' if slug else './'
+        root = relative_root(slug)
         template = (SOURCE / 'pages' / f'{slug or "home"}.html').read_text(encoding='utf-8')
         download = ''
         if slug == 'upcoming-issues' and has_calendar:
             download = f'\n      <a class="button" href="{root}{CALENDAR_FILE}" download>Download deadlines (.ics)</a>'
+        selections = ''
+        if not slug:
+            selections = pick_cards(picks[:3], root, 3)
+        elif slug == 'editors-picks':
+            selections = pick_cards(picks, root, 2)
         keys = {
             **external_links,
             'root': root,
@@ -272,6 +324,7 @@ def build():
             'deadline_preview': deadline_preview(schedule['calls'], root) if not slug else '',
             'calendar_calls': calls,
             'calendar_download': download,
+            'editors_picks': selections,
         }
         render(slug, title, desc, substitute(template, keys))
 
@@ -279,6 +332,11 @@ def build():
         for index, issue in enumerate(editions):
             body = issue_body(issue, page_artwork['issues']) + issue_navigation(series, editions, index)
             render(issue['slug'], issue['title'], f'{metadata(issue)} from Anemone Magazine.', body)
+
+    for pick in picks:
+        slug = f'editors-picks/{pick["slug"]}'
+        render(slug, f'{pick["title"]} by {pick["author"]}', pick['summary'],
+               pick_body(pick, issues[pick['issue']], relative_root(slug)))
 
     for slug, (destination, message) in {
         'home': ('', 'Anemone Magazine'),
