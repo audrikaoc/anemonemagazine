@@ -9,6 +9,7 @@ An independent literary magazine publishing fiction, nonfiction, poetry, and art
 - Update page copy in `site/pages/`. Update calls and dates in `site/submission-calendar.json` and record the edit date in `updated`. Use `YYYY-MM-DD` for published dates and omit dates that are still to be announced. The build generates the calendar download and the homepage deadline from that same file.
 - Edit the downloadable Word manuscript template in `docs/assets/downloads/anemone-manuscript-template.docx` when the submission formatting guidelines change.
 - Update `site/editors-picks.json` to change the selections. The first three appear on the homepage. Use the contributor’s published byline, issue slug, reader page number, and public reading link.
+- Regenerate the downloadable Editor’s Picks graphics after changing a title, byline, or selection. Run `python3 scripts/make_share_graphics.py --browser '/Applications/Google Chrome.app/Contents/MacOS/Google Chrome'`, then rebuild the site. The resulting PNGs in `docs/assets/share/` also power the link previews.
 - Edit guide text in `site/resources/`. Set each guide’s title, summary, topic, and artwork in `site/writing-resources.json`.
 - Keep site assets in `docs/assets/`. Issue covers belong in `docs/assets/covers/`.
 - Run the following with Python 3.9 or later. Commit both the source edits and regenerated files in `docs/`.

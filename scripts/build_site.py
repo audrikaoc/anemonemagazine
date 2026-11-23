@@ -42,6 +42,10 @@ def relative_root(slug):
     return '../' * (slug.count('/') + 1) if slug else './'
 
 
+def asset_version(filename):
+    return sha256((OUTPUT / 'assets' / filename).read_bytes()).hexdigest()[:12]
+
+
 def metadata(issue):
     label = f'Themed Issue {issue["theme"]}' if 'theme' in issue else 'General issue'
     return f'{label} · {issue["date"]}'
@@ -97,7 +101,7 @@ def pick_cards(picks, root, heading_level):
     )
 
 
-def pick_body(pick, issue, root):
+def pick_body(pick, issue, root, graphic):
     title = escape(pick['title'])
     reader = escape(pick['reader'])
     return f'''<article class="wrap pick-article">
@@ -111,18 +115,31 @@ def pick_body(pick, issue, root):
       <div class="actions">
         <a class="button" href="{reader}">Read the full piece</a>
         <a class="text-link" href="{root}{escape(issue['slug'])}/">View {escape(issue['title'])}</a>
+        <a class="text-link" href="#share-pick">Share</a>
       </div>
       <p class="pick-issue-page small">Page {pick['page']} in the issue.</p>
     </div>
     {artwork(pick['artwork'], root, 'page-art')}
   </header>
-  <div class="pick-reading prose">
-    <h2>Excerpt</h2>
-    <blockquote class="pick-excerpt" cite="{reader}"><p>{escape(pick['excerpt'])}</p></blockquote>
-    <h2>Why we picked it</h2>
-    <p>{escape(pick['note'])}</p>
+  <div class="content-layout">
+    <div class="prose">
+      <h2>Excerpt</h2>
+      <blockquote class="pick-excerpt" cite="{reader}"><p>{escape(pick['excerpt'])}</p></blockquote>
+      <h2>Why we picked it</h2>
+      <p>{escape(pick['note'])}</p>
+    </div>
+    <aside class="aside-panel pick-share" aria-labelledby="share-pick">
+      <h2 id="share-pick">Share this piece</h2>
+      <img src="{root}{escape(graphic)}" width="1200" height="630" loading="lazy" decoding="async" alt="Anemone Magazine share graphic for {title} by {escape(pick['author'])}">
+      <div class="actions">
+        <button class="button" type="button" data-copy-link="pick-copy-status" hidden>Copy link</button>
+        <a class="text-link" href="{root}{escape(graphic)}" download="anemone-{escape(pick['slug'])}-share.png">Download graphic</a>
+      </div>
+      <p id="pick-copy-status" class="copy-link-status small" role="status"></p>
+    </aside>
   </div>
-</article>'''
+</article>
+<script src="{root}assets/share-link.js" defer></script>'''
 
 
 def resource_cards(resources, root):
@@ -150,10 +167,10 @@ def resource_body(resource, resources, root):
       <h1>{escape(resource['title'])}</h1>
       <p class="lede">{escape(resource['summary'])}</p>
       <div class="actions resource-actions" hidden>
-        <button class="button resource-copy" type="button" hidden>Copy link</button>
+        <button class="button" type="button" data-copy-link="resource-copy-status" hidden>Copy link</button>
         <button class="button resource-print" type="button">Print guide</button>
       </div>
-      <p class="resource-copy-status small" role="status"></p>
+      <p id="resource-copy-status" class="copy-link-status small" role="status"></p>
     </div>
     {artwork(resource['artwork'], root, 'page-art')}
   </header>
@@ -169,7 +186,8 @@ def resource_body(resource, resources, root):
     </aside>
   </div>
 </article>
-<script src="{root}assets/writing-resources.js" defer></script>'''
+<script src="{root}assets/share-link.js" defer></script>
+<script src="{root}assets/writing-resources.js?v={asset_version('writing-resources.js')}" defer></script>'''
 
 
 def reach_audiences(root):
@@ -303,10 +321,10 @@ def build():
     page_artwork.update({f'editors-picks/{pick["slug"]}': pick['artwork'] for pick in picks})
     page_artwork.update({f'writing-resources/{resource["slug"]}': resource['artwork'] for resource in resources})
     external_links = {key: escape(value) for key, value in data.items() if isinstance(value, str)}
-    stylesheet_version = sha256((OUTPUT / 'assets' / 'site.css').read_bytes()).hexdigest()[:12]
+    stylesheet_version = asset_version('site.css')
     urls = []
 
-    def render(slug, title, desc, body, *, redirect=None, page_missing=False):
+    def render(slug, title, desc, body, *, redirect=None, page_missing=False, share_image=None):
         root = relative_root(slug)
         url = f'{DOMAIN}{slug}/' if slug else DOMAIN
         head = f'<link rel="canonical" href="{url}">\n  <meta property="og:url" content="{url}">'
@@ -328,6 +346,8 @@ def build():
   </script>'''
         else:
             urls.append(url)
+        if share_image:
+            head += '\n  <meta name="twitter:card" content="summary_large_image">'
         navigation = ''
         for target, label in NAVIGATION.items():
             current = ' aria-current="page"' if target == slug else ''
@@ -343,7 +363,7 @@ def build():
             'title': escape(f'{title} | Anemone Magazine' if slug else title),
             'description': escape(desc),
             'head': head,
-            'social_image': DOMAIN + image,
+            'social_image': DOMAIN + (share_image or image),
             'stylesheet_version': stylesheet_version,
             'navigation': navigation,
             'submission_current': ' aria-current="page"' if slug == 'submissions' else '',
@@ -390,8 +410,11 @@ def build():
 
     for pick in picks:
         slug = f'editors-picks/{pick["slug"]}'
+        graphic = f'assets/share/{pick["slug"]}.png'
+        if not (OUTPUT / graphic).is_file():
+            raise FileNotFoundError(OUTPUT / graphic)
         render(slug, f'{pick["title"]} by {pick["author"]}', pick['summary'],
-               pick_body(pick, issues[pick['issue']], relative_root(slug)))
+               pick_body(pick, issues[pick['issue']], relative_root(slug), graphic), share_image=graphic)
 
     for resource in resources:
         slug = f'writing-resources/{resource["slug"]}'

@@ -126,7 +126,8 @@ p:last-child { margin-bottom: 0; }
 :is(.pick-article, .resource-article) .page-intro > .pick-back { margin-top: 0; }
 .pick-article p.pick-byline { font-size: 1.1rem; }
 .pick-issue-page { margin-top: .65rem; color: var(--muted); }
-.pick-reading { padding-bottom: clamp(2.5rem, 6vw, 6rem); }
+.pick-share h2 { scroll-margin-top: 1.5rem; }
+.pick-share .actions { gap: .65rem 1rem; margin-top: 1rem; }
 .pick-excerpt { margin: 0; padding: clamp(1rem, 3vw, 1.7rem); border-left: .2rem solid var(--accent); background: #eeeee3; }
 .pick-excerpt p { font: clamp(1.85rem, 4vw, 2.6rem)/1.15 var(--serif); white-space: pre-line; }
 .archive-tools[hidden], .archive-group[hidden], .issue-card[hidden], .archive-jumps[hidden] { display: none; }
@@ -151,12 +152,12 @@ p:last-child { margin-bottom: 0; }
 .aside-panel h2 { margin-bottom: .6rem; font-size: 2.5rem; }
 .resource-article h1 { font-size: clamp(3rem, 6vw, 6.25rem); }
 .resource-print-brand { display: none; }
-.resource-actions[hidden], .resource-actions button[hidden] { display: none; }
-.resource-actions button { font: inherit; font-weight: 650; cursor: pointer; }
+.resource-actions[hidden], [data-copy-link][hidden] { display: none; }
+.resource-actions button, .pick-share button { font: inherit; font-weight: 650; cursor: pointer; }
 .resource-print { background: transparent; color: var(--green); }
 .resource-print:hover { color: white; }
-.resource-copy-status { color: var(--muted); }
-.resource-copy-status:not(:empty) { margin-top: .55rem; }
+.copy-link-status { color: var(--muted); }
+.copy-link-status:not(:empty) { margin-top: .55rem; }
 .resource-related ul { margin: .8rem 0 0; padding-left: 1.15rem; }
 .resource-related li + li { margin-top: .5rem; }
 .resource-prompt-list { padding-left: 1.6rem; }
@@ -293,7 +294,7 @@ p:last-child { margin-bottom: 0; }
 @media print {
   body:has(.resource-article) { color: black; background: white; font-size: 11pt; }
   body:has(.resource-article) :is(.site-header, .site-footer, .skip-link),
-  .resource-article :is(.page-art, .pick-back, .resource-actions, .resource-copy-status, .resource-related) { display: none; }
+  .resource-article :is(.page-art, .pick-back, .resource-actions, .copy-link-status, .resource-related) { display: none; }
   .resource-article { width: 100%; padding: 0; }
   .resource-print-brand { display: block; margin-bottom: .6rem; font-size: 9pt; font-weight: 650; }
   .resource-article :is(.page-heading, .content-layout) { display: block; padding: 0 0 1rem; }
