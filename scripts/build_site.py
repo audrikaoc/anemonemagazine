@@ -24,12 +24,14 @@ PAGES = {
     'submissions': ('Submission guidelines', 'Submit fiction, nonfiction, poetry, art, or photography to Anemone Magazine.'),
     'upcoming-issues': ('Submission calendar', 'Find Anemone’s submission deadlines, upcoming themes, and staff applications.'),
     'writingworkshops': ('Writing workshops', 'Join Anemone’s free writing workshops or apply to volunteer as a mentor.'),
+    'writing-resources': ('Writing resources', 'Find poetry prompts for teens, fiction revision exercises, and a guide to submitting your first short story.'),
     'reach': ('Our reach', 'Explore a country-level map of Anemone Magazine’s contributors and readers.'),
     'masthead': ('Masthead', 'Meet the editors and creative team behind Anemone Magazine.'),
     'faqs': ('Frequently asked questions', 'Find answers to common questions about submitting to Anemone Magazine.'),
     'privacy-policy': ('Privacy policy', 'Learn how Anemone Magazine handles contributor information.'),
 }
-NAVIGATION = {'issues': 'Issues', 'writingworkshops': 'Workshops', 'masthead': 'Masthead', 'reach': 'Reach'}
+NAVIGATION = {'issues': 'Issues', 'writingworkshops': 'Workshops', 'writing-resources': 'Resources',
+              'masthead': 'Masthead', 'reach': 'Reach'}
 
 
 def substitute(template, values):
@@ -121,6 +123,53 @@ def pick_body(pick, issue, root):
     <p>{escape(pick['note'])}</p>
   </div>
 </article>'''
+
+
+def resource_cards(resources, root):
+    return '\n    '.join(
+        f'<a class="pick-card resource-card" href="{root}writing-resources/{escape(resource["slug"])}/">'
+        f'{artwork(resource["artwork"], root, "pick-image", lazy=True)}'
+        f'<div class="pick-copy"><p class="eyebrow">{escape(resource["topic"])}</p>'
+        f'<h2>{escape(resource["title"])}</h2><p>{escape(resource["summary"])}</p></div></a>'
+        for resource in resources
+    )
+
+
+def resource_body(resource, resources, root):
+    content = (SOURCE / 'resources' / f'{resource["slug"]}.html').read_text(encoding='utf-8')
+    related = '\n        '.join(
+        f'<li><a href="{root}writing-resources/{escape(guide["slug"])}/">{escape(guide["title"])}</a></li>'
+        for guide in resources if guide['slug'] != resource['slug']
+    )
+    return f'''<article class="wrap resource-article">
+  <p class="resource-print-brand">Anemone Magazine · anemonemagazine.com</p>
+  <header class="page-heading page-heading-art">
+    <div class="page-intro">
+      <a class="pick-back text-link" href="{root}writing-resources/">All writing resources</a>
+      <p class="eyebrow">{escape(resource['topic'])}</p>
+      <h1>{escape(resource['title'])}</h1>
+      <p class="lede">{escape(resource['summary'])}</p>
+      <div class="actions resource-actions" hidden>
+        <button class="button resource-copy" type="button" hidden>Copy link</button>
+        <button class="button resource-print" type="button">Print guide</button>
+      </div>
+      <p class="resource-copy-status small" role="status"></p>
+    </div>
+    {artwork(resource['artwork'], root, 'page-art')}
+  </header>
+  <div class="content-layout">
+    <div class="prose resource-content">
+{substitute(content.rstrip(), {'root': root})}
+    </div>
+    <aside class="aside-panel resource-related">
+      <h2>More writing resources</h2>
+      <ul>
+        {related}
+      </ul>
+    </aside>
+  </div>
+</article>
+<script src="{root}assets/writing-resources.js" defer></script>'''
 
 
 def reach_audiences(root):
@@ -239,6 +288,7 @@ def write_page(path, html):
 def build():
     data = json.loads((SOURCE / 'magazine.json').read_text(encoding='utf-8'))
     picks = json.loads((SOURCE / 'editors-picks.json').read_text(encoding='utf-8'))
+    resources = json.loads((SOURCE / 'writing-resources.json').read_text(encoding='utf-8'))
     schedule = json.loads((SOURCE / 'submission-calendar.json').read_text(encoding='utf-8'))
     calls = calendar_calls(schedule['calls'], data['instagram'])
     has_calendar = write_calendar(schedule, OUTPUT, DOMAIN)
@@ -251,6 +301,7 @@ def build():
     years = sorted({publication_year(issue) for issue in issues.values()} - {''}, reverse=True)
     page_artwork = dict(data['page_artwork'])
     page_artwork.update({f'editors-picks/{pick["slug"]}': pick['artwork'] for pick in picks})
+    page_artwork.update({f'writing-resources/{resource["slug"]}': resource['artwork'] for resource in resources})
     external_links = {key: escape(value) for key, value in data.items() if isinstance(value, str)}
     stylesheet_version = sha256((OUTPUT / 'assets' / 'site.css').read_bytes()).hexdigest()[:12]
     urls = []
@@ -328,6 +379,7 @@ def build():
             'calendar_calls': calls,
             'calendar_download': download,
             'editors_picks': selections,
+            'writing_resources': resource_cards(resources, root) if slug == 'writing-resources' else '',
         }
         render(slug, title, desc, substitute(template, keys))
 
@@ -340,6 +392,10 @@ def build():
         slug = f'editors-picks/{pick["slug"]}'
         render(slug, f'{pick["title"]} by {pick["author"]}', pick['summary'],
                pick_body(pick, issues[pick['issue']], relative_root(slug)))
+
+    for resource in resources:
+        slug = f'writing-resources/{resource["slug"]}'
+        render(slug, resource['title'], resource['summary'], resource_body(resource, resources, relative_root(slug)))
 
     for slug, (destination, message) in {
         'home': ('', 'Anemone Magazine'),
