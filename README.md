@@ -11,10 +11,13 @@ An independent literary magazine publishing fiction, nonfiction, poetry, and art
 
 ```sh
 python3 scripts/build_site.py
+python3 scripts/check_links.py
 python3 -m http.server 8000 --bind 127.0.0.1 --directory docs
 ```
 
 Visit `http://127.0.0.1:8000/` to preview.
+
+GitHub runs the internal link checker and checks that the generated pages match their source on each push and pull request.
 
 ## Publish to GitHub Pages
 
@@ -25,7 +28,13 @@ Visit `http://127.0.0.1:8000/` to preview.
 
 ## Migration notes
 
-- The 12 existing Canva readers and published covers are linked from individual issue pages. Issue 1 and the July 2026 Pride issue need source files or fresh reading links from the editors.
+- The 12 existing Canva readers and published covers are linked from individual issue pages. Issue 1 retains its contributor credits and table of contents. It and the July 2026 Pride issue need source files or fresh reading links from the editors.
 - The Issue 11 submission and staff application forms request Google sign-in. Workshop registration and mentor application use the original Google Forms, and the workshop menu uses the original Google Doc.
 - Newsletter sign-up previously ran through Squarespace. It can be added to this site once the magazine has a hosted signup form and has migrated its subscriber list.
 - The homepage flower image in `docs/assets/images/anemones.jpg` is an original image generated for the redesign. Issue covers are from the magazine’s public Canva readers. Font licenses are in `docs/assets/fonts/`.
+
+### Homepage artwork
+
+Prompt used with the built-in image generator
+
+> Landscape 3:2 botanical editorial photograph for the homepage of a literary magazine for young writers. A small arrangement of real anemone coronaria flowers, dominant pale violet/lilac blooms with nearly black centers and a few deep crimson blooms and winding stems, emerging from a shadowy deep olive forest-green background. A dominant large pale flower just right of center, with smaller blossoms scattered asymmetrically. Look like an experimental 35mm film photograph, directional natural light grazing the delicate petals, tactile light analogue grain, art-book polish, dramatic contrast and natural botany. Fill the frame tastefully for a responsive crop; a deep dark left and outer edges. No lettering, border, graphics, vases or watermark.

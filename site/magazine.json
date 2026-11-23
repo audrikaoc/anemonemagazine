@@ -70,7 +70,41 @@
     {
       "slug": "issue-1",
       "title": "Issue 1",
-      "date": "Fall 2024"
+      "date": "Fall 2024",
+      "contents": {
+        "Writing": [
+          [
+            "CRACK",
+            "Sanjay Chilamakuri"
+          ],
+          [
+            "Light Dancer",
+            "Vivianne"
+          ]
+        ],
+        "Art": [
+          [
+            "Still Life",
+            "Ishika C"
+          ],
+          [
+            "Woodland",
+            "Ishika C"
+          ],
+          [
+            "Vase",
+            "Ishika C"
+          ],
+          [
+            "Horses",
+            "Ishika C"
+          ],
+          [
+            "Decorated Cows",
+            "Prisha Y"
+          ]
+        ]
+      }
     },
     {
       "slug": "themed-issue-5",
@@ -115,17 +149,20 @@
     {
       "name": "Audrika C",
       "role": "Founder and editor-in-chief",
-      "bio": "Audrika is an artist whose work has appeared in The Blue Marble and Rewrite the Stars. She has earned a Scholastic Silver Key and competed in VASE."
+      "bio": "Audrika is an artist whose work has appeared in The Blue Marble and Rewrite the Stars. She has earned a Scholastic Silver Key and competed in VASE.",
+      "portrait": "audrika-c.jpg"
     },
     {
       "name": "Khloe Nguyen",
       "role": "Graphic designer",
-      "bio": "Khloe works in acrylics, digital art, and gouache. She also makes jewelry, plays piano, and performs in color guard."
+      "bio": "Khloe works in acrylics, digital art, and gouache. She also makes jewelry, plays piano, and performs in color guard.",
+      "portrait": "khloe-nguyen.jpg"
     },
     {
       "name": "Anvi Gundala",
       "role": "Graphic designer",
-      "bio": "Anvi enjoys baking and spicy food."
+      "bio": "Anvi enjoys baking and spicy food.",
+      "portrait": "anvi-gundala.jpg"
     },
     {
       "name": "Pooja Burugapalli",
@@ -135,17 +172,20 @@
     {
       "name": "Julia Tseng",
       "role": "Art editor",
-      "bio": "Julia’s work earned a district honorable mention in the Congressional Art Competition and was exhibited in the NUMU Art Now competition."
+      "bio": "Julia’s work earned a district honorable mention in the Congressional Art Competition and was exhibited in the NUMU Art Now competition.",
+      "portrait": "julia-tseng.jpg"
     },
     {
       "name": "Gwen Dunn",
       "role": "Poetry editor",
-      "bio": "Gwen draws on personal experience and the environment in their poetry and enjoys finding community with other young writers."
+      "bio": "Gwen draws on personal experience and the environment in their poetry and enjoys finding community with other young writers.",
+      "portrait": "gwen-dunn.jpg"
     },
     {
       "name": "Heather Gemmell",
       "role": "Writing editor",
-      "bio": "Heather is based in Melbourne, Australia. She edits written and visual projects and enjoys working collaboratively."
+      "bio": "Heather is based in Melbourne, Australia. She edits written and visual projects and enjoys working collaboratively.",
+      "portrait": "heather-gemmell.jpg"
     },
     {
       "name": "Liu Yuniang",
@@ -160,12 +200,14 @@
     {
       "name": "Vania Salazar",
       "role": "Writing editor",
-      "bio": "Vania is a Mexican writer and aspiring film director. She enjoys volunteering, learning languages, and watching movies."
+      "bio": "Vania is a Mexican writer and aspiring film director. She enjoys volunteering, learning languages, and watching movies.",
+      "portrait": "vania-salazar.jpg"
     },
     {
       "name": "Ashley Nicole",
       "role": "Staff writer",
-      "bio": "Ashley is working toward a master’s in creative writing. She enjoys fantasy books and wants to help new writers find readers."
+      "bio": "Ashley is working toward a master’s in creative writing. She enjoys fantasy books and wants to help new writers find readers.",
+      "portrait": "ashley-nicole.jpg"
     }
   ]
 }

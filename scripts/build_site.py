@@ -59,11 +59,13 @@ def issue_cards(issues, root):
 def team_cards(people, root):
     cards = []
     for person in people:
-        portrait = ''
         if filename := person.get('portrait'):
             portrait = f'<img src="{root}assets/team/{escape(filename)}" alt="" loading="lazy" decoding="async" width="320" height="320">'
+        else:
+            initials = ''.join(part[0] for part in person['name'].split())
+            portrait = f'<span aria-hidden="true">{escape(initials)}</span>'
         cards.append(
-            f'<article class="person">{portrait}<p class="role">{escape(person["role"])}</p>'
+            f'<article class="person"><div class="person-photo">{portrait}</div><p class="role">{escape(person["role"])}</p>'
             f'<h3>{escape(person["name"])}</h3><p>{escape(person["bio"])}</p></article>'
         )
     return '\n    '.join(cards)
@@ -77,14 +79,20 @@ def issue_body(issue):
     else:
         description = '<p class="lede">A digital reader is currently unavailable for this issue.</p>'
         action = '<a class="text-link" href="mailto:anemone.magazin@gmail.com">Ask the editors about this issue</a>'
+    contents = ''
+    if groups := issue.get('contents'):
+        sections = []
+        for group, pieces in groups.items():
+            entries = ''.join(f'<li>{escape(piece)} <span>{escape(author)}</span></li>' for piece, author in pieces)
+            sections.append(f'<section><h3>{escape(group)}</h3><ul>{entries}</ul></section>')
+        contents = '\n    <div id="contents" class="prose issue-contents"><h2>In this issue</h2>' + ''.join(sections) + '</div>'
     return f'''<article class="wrap issue-detail">
   <div class="issue-detail-copy">
     <a class="back text-link" href="../issues/">All issues</a>
     <p class="eyebrow">{escape(metadata(issue))}</p>
     <h1>{title}</h1>
     {description}
-    <div class="actions">{action}</div>
-{issue.get('contents', '')}
+    <div class="actions">{action}</div>{contents}
   </div>
   <figure>{cover(issue, '../', detail=True)}</figure>
 </article>'''
@@ -171,6 +179,12 @@ def build():
     for slug, (destination, message) in {
         'home': ('', 'Anemone Magazine'),
         'questions': ('faqs/', 'Questions for the editors'),
+        'new-page': ('issue-1/#contents', 'Art from Issue 1'),
+        'new-page-1': ('issue-1/#contents', 'Light Dancer'),
+        'new-page-2': ('issue-1/#contents', 'Decorated Cows'),
+        'new-page-3': ('issue-1/#contents', 'CRACK'),
+        'new-page-4': ('issues/', 'The issue archive'),
+        'store': ('issues/', 'The issue archive'),
     }.items():
         render(slug, message, 'This page has moved.', migration_redirect(destination, message), redirect=destination)
 
