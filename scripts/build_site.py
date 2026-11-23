@@ -1,0 +1,187 @@
+#!/usr/bin/env python3
+"""Render the magazine into the docs directory for GitHub Pages."""
+
+import json
+import re
+from html import escape
+from pathlib import Path
+from xml.sax.saxutils import escape as xml_escape
+
+ROOT = Path(__file__).resolve().parents[1]
+SOURCE = ROOT / 'site'
+OUTPUT = ROOT / 'docs'
+DOMAIN = 'https://www.anemonemagazine.com/'
+PLACEHOLDER = re.compile(r'{{(\w+)}}')
+
+PAGES = {
+    '': ('Anemone Magazine | A place for your voice', 'An independent literary magazine publishing fiction, nonfiction, poetry, and art by young creators.'),
+    'issues': ('Issue archive', 'Read past general and themed editions of Anemone Magazine.'),
+    'submissions': ('Submission guidelines', 'Submit fiction, nonfiction, poetry, art, or photography to Anemone Magazine.'),
+    'upcoming-issues': ('Calls for work', 'Find Anemone’s upcoming issues, submission deadlines, and staff applications.'),
+    'writingworkshops': ('Writing workshops', 'Join Anemone’s free writing workshops or apply to volunteer as a mentor.'),
+    'masthead': ('Masthead', 'Meet the editors and creative team behind Anemone Magazine.'),
+    'faqs': ('Frequently asked questions', 'Find answers to common questions about submitting to Anemone Magazine.'),
+    'privacy-policy': ('Privacy policy', 'Learn how Anemone Magazine handles contributor information.'),
+}
+NAVIGATION = {'issues': 'Issues', 'writingworkshops': 'Workshops', 'masthead': 'Masthead'}
+
+
+def substitute(template, values):
+    return PLACEHOLDER.sub(lambda match: values[match[1]], template)
+
+
+def metadata(issue):
+    label = f'Themed Issue {issue["theme"]}' if 'theme' in issue else 'General issue'
+    return f'{label} · {issue["date"]}'
+
+
+def cover(issue, root, detail=False):
+    title = escape(issue['title'])
+    if filename := issue.get('cover'):
+        cover_path = OUTPUT / 'assets' / 'covers' / filename
+        if not cover_path.is_file():
+            raise FileNotFoundError(cover_path)
+        alt = f'Cover of {title}' if detail else ''
+        loading = '' if detail else ' loading="lazy" decoding="async"'
+        return f'<div class="cover-stage"><img src="{root}assets/covers/{escape(filename)}" alt="{alt}"{loading}></div>'
+    return f'<div class="cover-stage fallback" aria-hidden="true"><span>{title}</span></div>'
+
+
+def issue_cards(issues, root):
+    return '\n    '.join(
+        f'<a class="issue-card" href="{root}{issue["slug"]}/">'
+        f'{cover(issue, root)}<span class="issue-meta">{escape(metadata(issue))}</span>'
+        f'<span class="issue-title">{escape(issue["title"])}</span></a>'
+        for issue in issues
+    )
+
+
+def team_cards(people, root):
+    cards = []
+    for person in people:
+        portrait = ''
+        if filename := person.get('portrait'):
+            portrait = f'<img src="{root}assets/team/{escape(filename)}" alt="" loading="lazy" decoding="async" width="320" height="320">'
+        cards.append(
+            f'<article class="person">{portrait}<p class="role">{escape(person["role"])}</p>'
+            f'<h3>{escape(person["name"])}</h3><p>{escape(person["bio"])}</p></article>'
+        )
+    return '\n    '.join(cards)
+
+
+def issue_body(issue):
+    title = escape(issue['title'])
+    if reader := issue.get('reader'):
+        description = '<p class="lede">Read the full edition in the magazine’s Canva reader.</p>'
+        action = f'<a class="button" href="{escape(reader)}">Read the issue on Canva</a>'
+    else:
+        description = '<p class="lede">A digital reader is currently unavailable for this issue.</p>'
+        action = '<a class="text-link" href="mailto:anemone.magazin@gmail.com">Ask the editors about this issue</a>'
+    return f'''<article class="wrap issue-detail">
+  <div class="issue-detail-copy">
+    <a class="back text-link" href="../issues/">All issues</a>
+    <p class="eyebrow">{escape(metadata(issue))}</p>
+    <h1>{title}</h1>
+    {description}
+    <div class="actions">{action}</div>
+{issue.get('contents', '')}
+  </div>
+  <figure>{cover(issue, '../', detail=True)}</figure>
+</article>'''
+
+
+def migration_redirect(destination, message):
+    return f'''<header class="page-heading wrap">
+  <h1>{message}</h1>
+  <p><a class="text-link" href="../{destination}">Continue</a></p>
+</header>'''
+
+
+def write_page(path, html):
+    path.parent.mkdir(parents=True, exist_ok=True)
+    path.write_text(html, encoding='utf-8')
+
+
+def build():
+    data = json.loads((SOURCE / 'magazine.json').read_text(encoding='utf-8'))
+    layout = (SOURCE / 'layout.html').read_text(encoding='utf-8')
+    issues = {issue['slug']: issue for issue in data['issues']}
+    external_links = {key: escape(value) for key, value in data.items() if isinstance(value, str)}
+    urls = []
+
+    def render(slug, title, desc, body, *, redirect=None, page_missing=False):
+        root = './' if not slug else '../'
+        url = f'{DOMAIN}{slug}/' if slug else DOMAIN
+        head = f'<link rel="canonical" href="{url}">\n  <meta property="og:url" content="{url}">'
+        if redirect is not None:
+            head = f'<meta http-equiv="refresh" content="0; url={root}{redirect}">\n  <meta name="robots" content="noindex">'
+        elif page_missing:
+            root = '/'
+            head = '<meta name="robots" content="noindex">'
+            head += '''
+  <script>
+    if (location.hostname === 'audrikaoc.github.io') {
+      document.addEventListener('DOMContentLoaded', () => {
+        for (const link of document.querySelectorAll('[href^="/"]')) {
+          link.setAttribute('href', '/anemonemagazine' + link.getAttribute('href'));
+        }
+      });
+    }
+  </script>'''
+        else:
+            urls.append(url)
+        navigation = ''
+        for target, label in NAVIGATION.items():
+            current = ' aria-current="page"' if target == slug else ''
+            navigation += f'<li><a href="{root}{target}/"{current}>{label}</a></li>'
+        image = 'assets/images/anemones.jpg'
+        if slug in issues and issues[slug].get('cover'):
+            image = f'assets/covers/{issues[slug]["cover"]}'
+        context = {
+            **external_links,
+            'root': root,
+            'title': escape(f'{title} | Anemone Magazine' if slug else title),
+            'description': escape(desc),
+            'head': head,
+            'social_image': DOMAIN + image,
+            'navigation': navigation,
+            'submission_current': ' aria-current="page"' if slug == 'submissions' else '',
+            'body': body,
+        }
+        html = substitute(substitute(layout, context), context)
+        path = OUTPUT / ('404.html' if page_missing else (f'{slug}/index.html' if slug else 'index.html'))
+        write_page(path, html)
+
+    for slug, (title, desc) in PAGES.items():
+        root = '../' if slug else './'
+        template = (SOURCE / 'pages' / f'{slug or "home"}.html').read_text(encoding='utf-8')
+        keys = {
+            **external_links,
+            'root': root,
+            'featured_issues': issue_cards((issues[key] for key in data['featured']), root) if not slug else '',
+            'general_issues': issue_cards((issue for issue in issues.values() if 'theme' not in issue), root) if slug == 'issues' else '',
+            'themed_issues': issue_cards((issue for issue in issues.values() if 'theme' in issue), root) if slug == 'issues' else '',
+            'team': team_cards(data['team'], root) if slug == 'masthead' else '',
+        }
+        render(slug, title, desc, substitute(template, keys))
+
+    for issue in issues.values():
+        render(issue['slug'], issue['title'], f'{metadata(issue)} from Anemone Magazine.', issue_body(issue))
+
+    for slug, (destination, message) in {
+        'home': ('', 'Anemone Magazine'),
+        'questions': ('faqs/', 'Questions for the editors'),
+    }.items():
+        render(slug, message, 'This page has moved.', migration_redirect(destination, message), redirect=destination)
+
+    render('404', 'Page missing', 'Find your way back to Anemone Magazine.',
+           (SOURCE / 'pages' / '404.html').read_text(encoding='utf-8'), page_missing=True)
+    write_page(OUTPUT / '.nojekyll', '')
+    locations = '\n'.join(f'  <url><loc>{xml_escape(url)}</loc></url>' for url in sorted(urls))
+    write_page(OUTPUT / 'sitemap.xml', '<?xml version="1.0" encoding="UTF-8"?>\n'
+               f'<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">\n{locations}\n</urlset>\n')
+    write_page(OUTPUT / 'robots.txt', f'User-agent: *\nAllow: /\nSitemap: {DOMAIN}sitemap.xml\n')
+
+
+if __name__ == '__main__':
+    build()

@@ -1,0 +1,171 @@
+{
+  "instagram": "https://www.instagram.com/anemone_magazine/",
+  "issue_form": "https://docs.google.com/forms/d/e/1FAIpQLScBDZBP62yjk35koupI469VNQMugYMQ_k16adhq9938Uoc5Bg/viewform",
+  "staff_form": "https://docs.google.com/forms/d/e/1FAIpQLSeofvZft8w7XMuDwcrfSMVk4V0Yt7Un4Ly6FHewLEexGVtivw/viewform",
+  "workshop_menu": "https://docs.google.com/document/d/1P_X2g0OUgc8lAZXx4GHvT_QXytqn4Oli5siTieWdIFI/edit",
+  "workshop_registration": "https://docs.google.com/forms/d/e/1FAIpQLSdjSFJdFc4N-IQTt54GLvZ8cqyQkLU8se34YRHDoEPrWoPcJg/viewform",
+  "mentor_registration": "https://docs.google.com/forms/d/e/1FAIpQLSfI7FGPccTaIl9JyNAUAIyDeJd5qhOL_HAoDXE5T1rlHEUdLg/viewform",
+  "featured": [
+    "issue-9",
+    "issue-8",
+    "themed-issue-4"
+  ],
+  "issues": [
+    {
+      "slug": "issue-9",
+      "title": "Issue 9",
+      "date": "2026",
+      "reader": "https://www.canva.com/design/DAHVFZ2S-BM/V1XV8W1pD5YUxdYDLVEsgw/view?embed",
+      "cover": "issue-9.jpg"
+    },
+    {
+      "slug": "issue-8",
+      "title": "Issue 8",
+      "date": "Summer 2026",
+      "reader": "https://www.canva.com/design/DAHMZG_TZno/MA4q20xs4i-m5_ESjMCx8A/view?embed",
+      "cover": "issue-8.jpg"
+    },
+    {
+      "slug": "issue-7",
+      "title": "Issue 7",
+      "date": "Spring 2026",
+      "reader": "https://www.canva.com/design/DAG82Ki_XR4/Ff2LQfcFS2xyNUhfICIsJw/view?embed",
+      "cover": "issue-7.jpg"
+    },
+    {
+      "slug": "issue-6",
+      "title": "Issue 6",
+      "date": "Winter 2025",
+      "reader": "https://www.canva.com/design/DAG8XjUqazQ/-EyCIwfz0T8UfPYkg4lh-w/view?embed",
+      "cover": "issue-6.jpg"
+    },
+    {
+      "slug": "issue-5",
+      "title": "Issue 5",
+      "date": "Fall 2025",
+      "reader": "https://www.canva.com/design/DAGzwdtOIV4/xrq_E7gSzdXrvlW34lH1-w/view?embed",
+      "cover": "issue-5.jpg"
+    },
+    {
+      "slug": "issue-4",
+      "title": "Issue 4",
+      "date": "Summer 2025",
+      "reader": "https://www.canva.com/design/DAGqo2exVJ4/YRe06FMYMcN4UVCrugKv7g/view?embed",
+      "cover": "issue-4.jpg"
+    },
+    {
+      "slug": "issue-3",
+      "title": "Issue 3",
+      "date": "Spring 2025",
+      "reader": "https://www.canva.com/design/DAGoIhn5y_Y/vL3z5D4fY1TEBxt5BckNkQ/view?embed",
+      "cover": "issue-3.jpg"
+    },
+    {
+      "slug": "issue-2",
+      "title": "Issue 2",
+      "date": "Winter 2024",
+      "reader": "https://www.canva.com/design/DAGgEWgJTnw/lIcierXEPIDoJylHcjYxhQ/view?embed",
+      "cover": "issue-2.jpg"
+    },
+    {
+      "slug": "issue-1",
+      "title": "Issue 1",
+      "date": "Fall 2024"
+    },
+    {
+      "slug": "themed-issue-5",
+      "title": "Pride",
+      "date": "July 2026",
+      "theme": 5
+    },
+    {
+      "slug": "themed-issue-4",
+      "title": "All Hearts Lead to Rome",
+      "date": "Spring 2026",
+      "theme": 4,
+      "reader": "https://www.canva.com/design/DAHJmxzLsaU/tI9keGuqFPQIdvR9pemYMQ/view?embed",
+      "cover": "themed-issue-4.jpg"
+    },
+    {
+      "slug": "themedissue3",
+      "title": "Old Leaf, New Leaf",
+      "date": "Winter 2025",
+      "theme": 3,
+      "reader": "https://www.canva.com/design/DAG86aQ7LJ0/HgE129f7pwsbECDzUbsuug/view?embed",
+      "cover": "themedissue3.jpg"
+    },
+    {
+      "slug": "themedissue2",
+      "title": "Halloween",
+      "date": "Fall 2025",
+      "theme": 2,
+      "reader": "https://www.canva.com/design/DAG28A7iakM/v8lGWm6Y42PIlkU2Ioq4dw/view?embed",
+      "cover": "themedissue2.jpg"
+    },
+    {
+      "slug": "themedissue1",
+      "title": "Pride",
+      "date": "June 2025",
+      "theme": 1,
+      "reader": "https://www.canva.com/design/DAGr2DGrgF8/x4sb6PvdODRSQprK0VSV6w/view?embed",
+      "cover": "themedissue1.jpg"
+    }
+  ],
+  "team": [
+    {
+      "name": "Audrika C",
+      "role": "Founder and editor-in-chief",
+      "bio": "Audrika is an artist whose work has appeared in The Blue Marble and Rewrite the Stars. She has earned a Scholastic Silver Key and competed in VASE."
+    },
+    {
+      "name": "Khloe Nguyen",
+      "role": "Graphic designer",
+      "bio": "Khloe works in acrylics, digital art, and gouache. She also makes jewelry, plays piano, and performs in color guard."
+    },
+    {
+      "name": "Anvi Gundala",
+      "role": "Graphic designer",
+      "bio": "Anvi enjoys baking and spicy food."
+    },
+    {
+      "name": "Pooja Burugapalli",
+      "role": "Outreach manager",
+      "bio": "Pooja makes art and writes. She runs Anemone’s social media and encourages other young creators to share their work."
+    },
+    {
+      "name": "Julia Tseng",
+      "role": "Art editor",
+      "bio": "Julia’s work earned a district honorable mention in the Congressional Art Competition and was exhibited in the NUMU Art Now competition."
+    },
+    {
+      "name": "Gwen Dunn",
+      "role": "Poetry editor",
+      "bio": "Gwen draws on personal experience and the environment in their poetry and enjoys finding community with other young writers."
+    },
+    {
+      "name": "Heather Gemmell",
+      "role": "Writing editor",
+      "bio": "Heather is based in Melbourne, Australia. She edits written and visual projects and enjoys working collaboratively."
+    },
+    {
+      "name": "Liu Yuniang",
+      "role": "Writing editor",
+      "bio": "Liu is a Chinese-Indonesian student, poet, and writer based in Tokyo. Their work has appeared in Fourteen Hills, Lavender Review, and Sinister Wisdom."
+    },
+    {
+      "name": "Liza B",
+      "role": "Writing editor",
+      "bio": "Liza won a Scholastic Silver Key in poetry and received a commendation in the John Locke Institute’s Global Essay Prize. She enjoys thrifting and finding new music."
+    },
+    {
+      "name": "Vania Salazar",
+      "role": "Writing editor",
+      "bio": "Vania is a Mexican writer and aspiring film director. She enjoys volunteering, learning languages, and watching movies."
+    },
+    {
+      "name": "Ashley Nicole",
+      "role": "Staff writer",
+      "bio": "Ashley is working toward a master’s in creative writing. She enjoys fantasy books and wants to help new writers find readers."
+    }
+  ]
+}
