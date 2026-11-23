@@ -142,7 +142,7 @@ def build():
         for target, label in NAVIGATION.items():
             current = ' aria-current="page"' if target == slug else ''
             navigation += f'<li><a href="{root}{target}/"{current}>{label}</a></li>'
-        image = 'assets/images/anemones.jpg'
+        image = 'assets/images/anemones-daylight.jpg'
         if slug in issues and issues[slug].get('cover'):
             image = f'assets/covers/{issues[slug]["cover"]}'
         context = {
