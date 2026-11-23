@@ -97,16 +97,15 @@ def newsletter_signup(data):
         raise ValueError('Use the full public responder URL for newsletter_google_form.url')
     if not re.fullmatch(r'entry\.[0-9]+|emailAddress', email_field):
         raise ValueError('Use the Google Forms email field name for newsletter_google_form.email_field')
-    action = url.removesuffix('/viewform') + '/formResponse?embedded=true'
-    return f'''<form class="newsletter-form" action="{action}" method="post" target="newsletter-result" aria-labelledby="newsletter">
+    action = url.removesuffix('/viewform') + '/formResponse'
+    return f'''<form class="newsletter-form" action="{action}" method="post" target="_blank" rel="noopener" aria-labelledby="newsletter">
       <label for="newsletter-email">Email address</label>
       <div class="newsletter-fields">
         <input id="newsletter-email" name="{email_field}" type="email" autocomplete="email" required>
         <button class="button" type="submit">Subscribe</button>
       </div>
       <p class="small" id="newsletter-status" role="status"></p>
-    </form>
-    <iframe class="newsletter-result" id="newsletter-result" name="newsletter-result" title="Newsletter signup result" width="640" height="240" sandbox="allow-forms allow-scripts allow-same-origin"></iframe>'''
+    </form>'''
 
 
 def pick_cards(picks, root, heading_level):
@@ -440,6 +439,7 @@ def build():
             'mission_artwork': artwork('anemone-engraving.jpg', root, 'mission-art', lazy=True) if not slug else '',
             'deadline_preview': deadline_preview(schedule['calls'], root) if not slug else '',
             'newsletter_signup_form': newsletter_signup(data) if not slug else '',
+            'newsletter_script_version': asset_version('newsletter.js') if not slug else '',
             'calendar_calls': calls,
             'calendar_download': download,
             'pick_spotlight': pick_spotlight(spotlight, root) if not slug and spotlight else '',
