@@ -27,7 +27,8 @@ GitHub runs the internal link checker and checks that the generated pages match 
 ## Connect the newsletter signup
 
 - Publish a Google Form with one required short-answer email question and set its response validation to email format. Give anyone with the link responder access. Keep **Collect email addresses**, **Limit to 1 response**, and **View results summary** off. [Google Forms publishing guide](https://support.google.com/docs/answer/2839588)
-- Use **Pre-fill form** with `sample@example.com` to find the question name in the link, such as `entry.123456789`. Set `newsletter_google_form` in `site/magazine.json` to an object with `url` set to the full public `/viewform` URL and `email_field` set to the question name. Rebuild and confirm a test signup appears in the form’s Responses tab. [Google Forms response guide](https://support.google.com/docs/answer/139706)
+- Use **Pre-fill form** with `sample@example.com` to find the question name in the link, such as `entry.123456789`. Set `newsletter_google_form` in `site/magazine.json` to an object with `url` set to the full public `/viewform` URL and `email_field` set to the question name.
+- Set the form’s confirmation message to “You’re subscribed to the Anemone newsletter!” under **Settings → Presentation**. The homepage displays that Google Forms confirmation below the email field. Rebuild and check that a test signup stays on the homepage and appears in the form’s Responses tab. [Google Forms publishing guide](https://support.google.com/docs/answer/2839588)
 
 ## Update the Reach page
 

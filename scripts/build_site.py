@@ -97,15 +97,16 @@ def newsletter_signup(data):
         raise ValueError('Use the full public responder URL for newsletter_google_form.url')
     if not re.fullmatch(r'entry\.[0-9]+|emailAddress', email_field):
         raise ValueError('Use the Google Forms email field name for newsletter_google_form.email_field')
-    action = url.removesuffix('/viewform') + '/formResponse'
-    return f'''<form class="newsletter-form" action="{action}" method="post" aria-labelledby="newsletter">
+    action = url.removesuffix('/viewform') + '/formResponse?embedded=true'
+    return f'''<form class="newsletter-form" action="{action}" method="post" target="newsletter-result" aria-labelledby="newsletter">
       <label for="newsletter-email">Email address</label>
       <div class="newsletter-fields">
-        <input id="newsletter-email" name="{email_field}" type="email" autocomplete="email" aria-describedby="newsletter-confirmation" required>
+        <input id="newsletter-email" name="{email_field}" type="email" autocomplete="email" required>
         <button class="button" type="submit">Subscribe</button>
       </div>
-      <p class="small" id="newsletter-confirmation">Google Forms will show your signup confirmation.</p>
-    </form>'''
+      <p class="small" id="newsletter-status" role="status"></p>
+    </form>
+    <iframe class="newsletter-result" id="newsletter-result" name="newsletter-result" title="Newsletter signup result" width="640" height="240" sandbox="allow-forms allow-scripts allow-same-origin"></iframe>'''
 
 
 def pick_cards(picks, root, heading_level):
