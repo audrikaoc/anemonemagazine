@@ -1,0 +1,97 @@
+{
+  "signup_form": "https://docs.google.com/forms/d/e/1FAIpQLSfwA0-jYPud2Pz6Bd5UZkFeaNdPcUe_hGrZxQ61xbNeLQSTXQ/viewform",
+  "email_field": "entry.1434813963",
+  "pick": {
+    "slug": "watercolor",
+    "title": "Watercolor",
+    "author": "Alicia Christensen",
+    "summary": "Red and blue trace the changing feelings of a speaker looking back on a romance.",
+    "reader": "https://docs.google.com/document/d/1eBWLLgOFlJwsICpxS34j3hzoCAEdcnES/preview"
+  },
+  "issues": [
+    {
+      "slug": "issue-9",
+      "title": "Issue 9",
+      "date": "2026",
+      "readable": true
+    },
+    {
+      "slug": "issue-8",
+      "title": "Issue 8",
+      "date": "Summer 2026",
+      "readable": true
+    },
+    {
+      "slug": "issue-7",
+      "title": "Issue 7",
+      "date": "Spring 2026",
+      "readable": true
+    },
+    {
+      "slug": "issue-6",
+      "title": "Issue 6",
+      "date": "Winter 2025",
+      "readable": true
+    },
+    {
+      "slug": "issue-5",
+      "title": "Issue 5",
+      "date": "Fall 2025",
+      "readable": true
+    },
+    {
+      "slug": "issue-4",
+      "title": "Issue 4",
+      "date": "Summer 2025",
+      "readable": true
+    },
+    {
+      "slug": "issue-3",
+      "title": "Issue 3",
+      "date": "Spring 2025",
+      "readable": true
+    },
+    {
+      "slug": "issue-2",
+      "title": "Issue 2",
+      "date": "Winter 2024",
+      "readable": true
+    },
+    {
+      "slug": "issue-1",
+      "title": "Issue 1",
+      "date": "Fall 2024",
+      "readable": true
+    },
+    {
+      "slug": "themed-issue-5",
+      "title": "Pride",
+      "date": "July 2026",
+      "readable": false
+    },
+    {
+      "slug": "themed-issue-4",
+      "title": "All Hearts Lead to Rome",
+      "date": "Spring 2026",
+      "readable": true
+    },
+    {
+      "slug": "themedissue3",
+      "title": "Old Leaf, New Leaf",
+      "date": "Winter 2025",
+      "readable": true
+    },
+    {
+      "slug": "themedissue2",
+      "title": "Halloween",
+      "date": "Fall 2025",
+      "readable": true
+    },
+    {
+      "slug": "themedissue1",
+      "title": "Pride",
+      "date": "June 2025",
+      "readable": true
+    }
+  ]
+}

@@ -36,6 +36,21 @@ GitHub runs the internal link checker and checks that the generated pages match 
 - Use **Pre-fill form** with `sample@example.com` to find the question name in the link, such as `entry.123456789`. Set `newsletter_google_form` in `site/magazine.json` to an object with `url` set to the full public `/viewform` URL and `email_field` set to the question name.
 - The homepage shows an inline message when it sends the signup request. Google Forms returns an opaque response to the site, so use the form’s **Responses** tab to confirm that a test signup was recorded. [Google Forms response guide](https://support.google.com/docs/answer/139706)
 
+### Activate newsletter email delivery
+
+1. Sign in to the Google account that should send Anemone’s newsletter. In [Google Forms](https://docs.google.com/forms/), open the existing signup form named **email-submission**. From its **More (⋮)** menu, open **Script editor** or **Apps Script**.
+2. Copy [the newsletter script](newsletter/Code.gs) into a script file in that project. Save it, select **setupNewsletter**, and click **Run**. Authorize Google Forms, email sending, external requests, and the scheduled trigger. Always use the same sending account for setup. [Google’s trigger guide](https://developers.google.com/apps-script/guides/triggers/installable)
+3. Setup creates an **Unsubscribe from Anemone Magazine** form in that account. Open its sharing settings and confirm anyone with the link can respond. In Apps Script’s **Triggers** tab, check that **runNewsletter** runs every 15 minutes.
+4. Test with a fresh email address you control. Submit it from the homepage, then run **runNewsletter** or wait for the next check. Open the featured piece from the welcome email. Open its unsubscribe link in a private window and submit the prefilled form to check the opt-out. Repeating setup in the same project preserves the archive baseline and subscriptions.
+
+The welcome letter uses the homepage’s featured Editor’s Pick. Readers who signed up before activation receive future issues. Each newsletter goes to one reader and includes an individual opt-out link. Repeat signups do not generate another welcome or undo an unsubscribe.
+
+To announce an issue, publish its archive entry with a reader link or table of contents and keep its slug stable. The site build generates `docs/newsletter.json`. Delivery checks the live magazine domain and GitHub Pages for new, readable issues. Archive entries present at setup, later copy edits, and submission calls do not trigger mail. Before the site goes live, the script can still send welcome letters using the reading link in the GitHub copy.
+
+Google MailApp sends under the account that installed the trigger. When the account reaches its daily recipient limit, later checks pick up outstanding mail as quota becomes available. This setup is intended for a small list. Subscriber state is stored privately in the Apps Script project and is subject to Google’s script-property storage limit. [MailApp reference](https://developers.google.com/apps-script/reference/mail/mail-app) · [Google quotas](https://developers.google.com/apps-script/guides/services/quotas)
+
+If an execution reports an uncertain delivery, the script holds that reader’s pending message to prevent a duplicate. In **Project Settings → Script Properties**, locate the `reader.` key ending in the six characters shown in the execution log. After verifying delivery, remove the `pending` field from its JSON value and set `welcomed` to `true` for a welcome or `lastIssue` to the issue sequence number from `pending` (for example, `issue-2` means sequence 2). If you confirm it was never sent, remove only `pending` to retry. Keep subscriber records, addresses, and unsubscribe links private.
+
 ## Connect the feedback form
 
 - Set `feedback_google_form` in `site/magazine.json` to the published Google Form’s `url` and paragraph question `response_field`. Rebuild and confirm a test message submitted from `/feedback/` appears in the form’s **Responses** tab.

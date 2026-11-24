@@ -368,6 +368,17 @@ def build():
     if spotlight_slug := data.get('spotlight_pick'):
         spotlight = {pick['slug']: pick for pick in picks}[spotlight_slug]
     more_picks = [pick for pick in picks if pick != spotlight][:3]
+    newsletter = {
+        'signup_form': data['newsletter_google_form']['url'],
+        'email_field': data['newsletter_google_form']['email_field'],
+        'pick': {key: spotlight[key] for key in ('slug', 'title', 'author', 'summary', 'reader')} if spotlight else None,
+        'issues': [
+            {'slug': issue['slug'], 'title': issue['title'], 'date': issue['date'],
+             'readable': bool(issue.get('reader') or issue.get('contents'))}
+            for issue in data['issues']
+        ],
+    }
+    write_page(OUTPUT / 'newsletter.json', json.dumps(newsletter, ensure_ascii=False, indent=2) + '\n')
     resources = json.loads((SOURCE / 'writing-resources.json').read_text(encoding='utf-8'))
     schedule = json.loads((SOURCE / 'submission-calendar.json').read_text(encoding='utf-8'))
     calls = calendar_calls(schedule['calls'], data['instagram'])
