@@ -109,12 +109,14 @@ def newsletter_signup(data):
         r'[^.\s@]+(?:\.[^.\s@]+)*@[^.\s@]+(?:\.[^.\s@]+)+'
     )
     return f'''<form class="google-form newsletter-form" data-google-form="newsletter signup" action="{action}" method="post" target="_blank" rel="noopener" aria-labelledby="newsletter">
-      <label for="newsletter-email">Email address</label>
-      <div class="newsletter-fields">
-        <input id="newsletter-email" name="{email_field}" type="email" autocomplete="email" pattern="{email_pattern}" aria-describedby="newsletter-status" data-required-message="Enter your email address." data-invalid-message="Enter a valid email address, such as reader@example.com." required>
-        <button class="button" type="submit">Subscribe</button>
+      <div class="form-fields">
+        <label for="newsletter-email">Email address</label>
+        <div class="newsletter-fields">
+          <input id="newsletter-email" name="{email_field}" type="email" autocomplete="email" pattern="{email_pattern}" aria-describedby="newsletter-status" data-required-message="Enter your email address." data-invalid-message="Enter a valid email address, such as reader@example.com." required>
+          <button class="button" type="submit">Subscribe</button>
+        </div>
       </div>
-      <p class="small form-status" id="newsletter-status" role="status"></p>
+      <p class="small form-status" id="newsletter-status" role="status" tabindex="-1"></p>
     </form>'''
 
 

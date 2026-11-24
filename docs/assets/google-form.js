@@ -49,14 +49,10 @@
       await fetch(form.action, { method: 'POST', mode: 'no-cors', body, signal: controller.signal });
       // Google Forms returns an opaque response to the site.
       if (subject === 'newsletter signup') window.gtag?.('event', 'newsletter_signup_request');
-      form.reset();
       status.dataset.state = 'sent';
       status.textContent = `Thanks! Your ${subject} was sent.`;
-      const feedbackFields = form.querySelector('.feedback-fields');
-      if (feedbackFields) {
-        feedbackFields.remove();
-        status.focus();
-      }
+      form.querySelector('.form-fields').remove();
+      status.focus();
     } catch {
       status.dataset.state = 'error';
       status.textContent = `We couldn’t send your ${subject}. Please try again.`;
