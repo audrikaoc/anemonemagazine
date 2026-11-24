@@ -9,6 +9,7 @@
     "masthead": "anemone-portraits.jpg",
     "reach": "anemone-sky.jpg",
     "faqs": "anemone-cyanotype.jpg",
+    "feedback": "anemone-watercolor.jpg",
     "privacy-policy": "anemone-engraving.jpg",
     "404": "anemone-pressed.jpg"
   },
@@ -17,6 +18,10 @@
   "newsletter_google_form": {
     "url": "https://docs.google.com/forms/d/e/1FAIpQLSfwA0-jYPud2Pz6Bd5UZkFeaNdPcUe_hGrZxQ61xbNeLQSTXQ/viewform",
     "email_field": "entry.1434813963"
+  },
+  "feedback_google_form": {
+    "url": "https://docs.google.com/forms/d/e/1FAIpQLSfHxQrCuak0CuPGLLRmmGe7eApSwEGeDeFvrhgYRxsr3gKfCg/viewform",
+    "response_field": "entry.775477395"
   },
   "staff_form": "https://docs.google.com/forms/d/e/1FAIpQLSeofvZft8w7XMuDwcrfSMVk4V0Yt7Un4Ly6FHewLEexGVtivw/viewform",
   "workshop_menu": "https://docs.google.com/document/d/1P_X2g0OUgc8lAZXx4GHvT_QXytqn4Oli5siTieWdIFI/edit",

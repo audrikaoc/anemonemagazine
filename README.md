@@ -36,6 +36,10 @@ GitHub runs the internal link checker and checks that the generated pages match 
 - Use **Pre-fill form** with `sample@example.com` to find the question name in the link, such as `entry.123456789`. Set `newsletter_google_form` in `site/magazine.json` to an object with `url` set to the full public `/viewform` URL and `email_field` set to the question name.
 - The homepage shows an inline message when it sends the signup request. Google Forms returns an opaque response to the site, so use the form’s **Responses** tab to confirm that a test signup was recorded. [Google Forms response guide](https://support.google.com/docs/answer/139706)
 
+## Connect the feedback form
+
+- Set `feedback_google_form` in `site/magazine.json` to the published Google Form’s `url` and paragraph question `response_field`. Rebuild and confirm a test message submitted from `/feedback/` appears in the form’s **Responses** tab.
+
 ## Update the Reach page
 
 - Update `site/reach.json` with public, aggregate country codes such as `AU`, `GB`, and `US`, then rebuild the site. The map highlights each listed country once.

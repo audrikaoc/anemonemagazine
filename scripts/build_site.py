@@ -28,6 +28,7 @@ PAGES = {
     'reach': ('Our reach', 'Explore a country-level map of Anemone Magazine’s contributors and readers.'),
     'masthead': ('Masthead', 'Meet the editors and creative team behind Anemone Magazine.'),
     'faqs': ('Frequently asked questions', 'Find answers to common questions about submitting to Anemone Magazine.'),
+    'feedback': ('Feedback', 'Tell the Anemone Magazine editors what’s working well and what we could improve.'),
     'privacy-policy': ('Privacy policy', 'Learn how Anemone Magazine handles contributor information.'),
 }
 NAVIGATION = {'issues': 'Issues', 'writingworkshops': 'Workshops', 'writing-resources': 'Resources',
@@ -89,27 +90,31 @@ def issue_cards(issues, root, *, filterable=False):
     return '\n    '.join(cards)
 
 
+def google_form_action(form):
+    url = form['url']
+    if not re.fullmatch(r'https://docs\.google\.com/forms/d/e/[A-Za-z0-9_-]+/viewform', url):
+        raise ValueError('Use the full public responder URL for the Google Form')
+    return url.removesuffix('/viewform') + '/formResponse'
+
+
 def newsletter_signup(data):
     form = data['newsletter_google_form']
-    url = form['url']
     email_field = form['email_field']
-    if not re.fullmatch(r'https://docs\.google\.com/forms/d/e/[A-Za-z0-9_-]+/viewform', url):
-        raise ValueError('Use the full public responder URL for newsletter_google_form.url')
     if not re.fullmatch(r'entry\.[0-9]+|emailAddress', email_field):
         raise ValueError('Use the Google Forms email field name for newsletter_google_form.email_field')
-    action = url.removesuffix('/viewform') + '/formResponse'
+    action = google_form_action(form)
     # Extend the browser's email check with SMTP length limits and dot placement.
     email_pattern = (
         r'(?=.{1,254}$)(?=[^@]{1,64}@)'
         r'[^.\s@]+(?:\.[^.\s@]+)*@[^.\s@]+(?:\.[^.\s@]+)+'
     )
-    return f'''<form class="newsletter-form" action="{action}" method="post" target="_blank" rel="noopener" aria-labelledby="newsletter">
+    return f'''<form class="google-form newsletter-form" data-google-form="newsletter signup" action="{action}" method="post" target="_blank" rel="noopener" aria-labelledby="newsletter">
       <label for="newsletter-email">Email address</label>
       <div class="newsletter-fields">
-        <input id="newsletter-email" name="{email_field}" type="email" autocomplete="email" pattern="{email_pattern}" aria-describedby="newsletter-status" required>
+        <input id="newsletter-email" name="{email_field}" type="email" autocomplete="email" pattern="{email_pattern}" aria-describedby="newsletter-status" data-required-message="Enter your email address." data-invalid-message="Enter a valid email address, such as reader@example.com." required>
         <button class="button" type="submit">Subscribe</button>
       </div>
-      <p class="small" id="newsletter-status" role="status"></p>
+      <p class="small form-status" id="newsletter-status" role="status"></p>
     </form>'''
 
 
@@ -352,6 +357,12 @@ def build():
     if analytics_id and not re.fullmatch(r'G-[A-Z0-9]+', analytics_id):
         raise ValueError('Set analytics_measurement_id to a Google Analytics 4 Measurement ID beginning with G-')
     analytics_version = asset_version('analytics.js') if analytics_id else ''
+    feedback_form = data['feedback_google_form']
+    feedback_action = google_form_action(feedback_form)
+    feedback_field = feedback_form['response_field']
+    if not re.fullmatch(r'entry\.[0-9]+', feedback_field):
+        raise ValueError('Use the Google Forms question name for feedback_google_form.response_field')
+    google_form_version = asset_version('google-form.js')
     picks = json.loads((SOURCE / 'editors-picks.json').read_text(encoding='utf-8'))
     spotlight = next(iter(picks), None)
     if spotlight_slug := data.get('spotlight_pick'):
@@ -453,7 +464,9 @@ def build():
             'mission_artwork': artwork('anemone-engraving.jpg', root, 'mission-art', lazy=True) if not slug else '',
             'deadline_preview': deadline_preview(schedule['calls'], root) if not slug else '',
             'newsletter_signup_form': newsletter_signup(data) if not slug else '',
-            'newsletter_script_version': asset_version('newsletter.js') if not slug else '',
+            'google_form_version': google_form_version,
+            'feedback_action': feedback_action,
+            'feedback_field': feedback_field,
             'calendar_calls': calls,
             'calendar_download': download,
             'pick_spotlight': pick_spotlight(spotlight, root) if not slug and spotlight else '',

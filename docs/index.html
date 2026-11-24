@@ -13,7 +13,7 @@
   <meta property="og:description" content="An independent literary magazine publishing fiction, nonfiction, poetry, and art by young creators.">
   <meta property="og:image" content="https://www.anemonemagazine.com/assets/images/anemones-daylight.jpg">
   <link rel="icon" href="./assets/flower.svg" type="image/svg+xml">
-  <link rel="stylesheet" href="./assets/site.css?v=a1f2c631b315">
+  <link rel="stylesheet" href="./assets/site.css?v=21ee8a530585">
   <script src="./assets/analytics.js?v=46db420d90d0" data-measurement-id="G-NHTWXXPQND" defer></script>
 </head>
 <body>
@@ -106,13 +106,13 @@ I was the sole reflection in your eye.</p></blockquote>
       <h2 id="newsletter">The Anemone newsletter</h2>
       <p>Get new issue announcements, calls for submissions, and workshop news by email.</p>
     </div>
-    <form class="newsletter-form" action="https://docs.google.com/forms/d/e/1FAIpQLSfwA0-jYPud2Pz6Bd5UZkFeaNdPcUe_hGrZxQ61xbNeLQSTXQ/formResponse" method="post" target="_blank" rel="noopener" aria-labelledby="newsletter">
+    <form class="google-form newsletter-form" data-google-form="newsletter signup" action="https://docs.google.com/forms/d/e/1FAIpQLSfwA0-jYPud2Pz6Bd5UZkFeaNdPcUe_hGrZxQ61xbNeLQSTXQ/formResponse" method="post" target="_blank" rel="noopener" aria-labelledby="newsletter">
       <label for="newsletter-email">Email address</label>
       <div class="newsletter-fields">
-        <input id="newsletter-email" name="entry.1434813963" type="email" autocomplete="email" pattern="(?=.{1,254}$)(?=[^@]{1,64}@)[^.\s@]+(?:\.[^.\s@]+)*@[^.\s@]+(?:\.[^.\s@]+)+" aria-describedby="newsletter-status" required>
+        <input id="newsletter-email" name="entry.1434813963" type="email" autocomplete="email" pattern="(?=.{1,254}$)(?=[^@]{1,64}@)[^.\s@]+(?:\.[^.\s@]+)*@[^.\s@]+(?:\.[^.\s@]+)+" aria-describedby="newsletter-status" data-required-message="Enter your email address." data-invalid-message="Enter a valid email address, such as reader@example.com." required>
         <button class="button" type="submit">Subscribe</button>
       </div>
-      <p class="small" id="newsletter-status" role="status"></p>
+      <p class="small form-status" id="newsletter-status" role="status"></p>
     </form>
   </div>
 </section>
@@ -139,7 +139,7 @@ I was the sole reflection in your eye.</p></blockquote>
   </div>
 </section>
 <script src="./assets/submission-calendar.js" defer></script>
-<script src="./assets/newsletter.js?v=6bc5d5390bd4" defer></script>
+<script src="./assets/google-form.js?v=43d3aeafd733" defer></script>
 
   </main>
   <footer class="site-footer">
@@ -153,6 +153,7 @@ I was the sole reflection in your eye.</p></blockquote>
         <li><a href="./editors-picks/">Editor’s Picks</a></li>
         <li><a href="./#newsletter">Newsletter</a></li>
         <li><a href="mailto:anemone.magazin@gmail.com">Contact</a></li>
+        <li><a href="./feedback/">Feedback</a></li>
         <li><a href="https://www.instagram.com/anemone_magazine/">Instagram</a></li>
         <li><a href="./faqs/">FAQs</a></li>
         <li><a href="./privacy-policy/">Privacy policy</a></li>
