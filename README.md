@@ -38,10 +38,13 @@ GitHub runs the internal link checker and checks that the generated pages match 
 
 ### Activate newsletter email delivery
 
-1. Sign in to the Google account that should send Anemone’s newsletter. In [Google Forms](https://docs.google.com/forms/), open the existing signup form named **email-submission**. From its **More (⋮)** menu, open **Script editor** or **Apps Script**.
+1. Sign in to the Google account that should send Anemone’s newsletter. In [Google Forms](https://docs.google.com/forms/), open **newsletter-email-submission**, the form with the question **Provide subscriber email address**. From its **More (⋮)** menu, open **Apps Script**.
 2. Copy [the newsletter script](newsletter/Code.gs) into a script file in that project. Save it, select **setupNewsletter**, and click **Run**. Authorize Google Forms, email sending, external requests, and the scheduled trigger. Always use the same sending account for setup. [Google’s trigger guide](https://developers.google.com/apps-script/guides/triggers/installable)
 3. Setup creates an **Unsubscribe from Anemone Magazine** form in that account. Open its sharing settings and confirm anyone with the link can respond. In Apps Script’s **Triggers** tab, check that **runNewsletter** runs every 15 minutes.
-4. Test with a fresh email address you control. Submit it from the homepage, then run **runNewsletter** or wait for the next check. Open the featured piece from the welcome email. Open its unsubscribe link in a private window and submit the prefilled form to check the opt-out. Repeating setup in the same project preserves the archive baseline and subscriptions.
+4. After setup, submit a fresh address you control using the [newsletter Google Form](https://docs.google.com/forms/d/e/1FAIpQLSfwA0-jYPud2Pz6Bd5UZkFeaNdPcUe_hGrZxQ61xbNeLQSTXQ/viewform). The redesigned homepage also submits to this form. The legacy Squarespace signup uses its own list.
+5. In the form editor, open **Responses → Individual** and confirm your test submission is present. In Apps Script, select **runNewsletter** and click **Run**, or wait for the scheduled check. Look for **Welcome to Anemone Magazine**. Open its unsubscribe link in a private window and submit the prefilled form to check the opt-out.
+
+If the email does not arrive, open **Apps Script → Executions** and select the **runNewsletter** entry after the signup. A failed run shows its error there. A completed run may have skipped the address, for example if it was already on the list before setup. In the receiving Gmail account, search `in:anywhere subject:"Welcome to Anemone Magazine"` to include Spam and Trash.
 
 The welcome letter uses the homepage’s featured Editor’s Pick. Readers who signed up before activation receive future issues. Each newsletter goes to one reader and includes an individual opt-out link. Repeat signups do not generate another welcome or undo an unsubscribe.
 
