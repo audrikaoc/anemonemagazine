@@ -20,6 +20,7 @@
   });
 
   answer.addEventListener('input', () => {
+    answer.setCustomValidity(answer.value && !answer.value.trim() ? answer.dataset.requiredMessage : '');
     answer.removeAttribute('aria-invalid');
     status.removeAttribute('data-state');
     status.textContent = '';
@@ -50,6 +51,11 @@
       form.reset();
       status.dataset.state = 'sent';
       status.textContent = `Thanks! Your ${subject} was sent.`;
+      const feedbackFields = form.querySelector('.feedback-fields');
+      if (feedbackFields) {
+        feedbackFields.remove();
+        status.focus();
+      }
     } catch {
       status.dataset.state = 'error';
       status.textContent = `We couldn’t send your ${subject}. Please try again.`;
