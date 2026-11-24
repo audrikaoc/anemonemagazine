@@ -35,7 +35,8 @@ def calendar_calls(calls, instagram):
         schedule = f'\n      <dl class="call-dates">{"".join(dates)}</dl>' if dates else ''
         if form := call.get('form'):
             action = (
-                f'<a class="button" href="{escape(form)}" data-submission-form="{escape(call["id"])}">'
+                f'<a class="button" href="{escape(form)}" target="_blank" rel="noopener" '
+                f'data-submission-form="{escape(call["id"])}">'
                 'Open the submission form</a>'
             )
             if note := call.get('form_note'):
