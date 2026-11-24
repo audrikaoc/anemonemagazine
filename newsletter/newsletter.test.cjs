@@ -9,14 +9,12 @@ function fixture() {
   const feed = JSON.parse(fs.readFileSync(path.join(__dirname, '../docs/newsletter.json'), 'utf8'));
   const state = {now: 100000, live: false, quota: 100, mail: [], triggers: [], errors: [], records: {}};
   function form(id, publicUrl, entry) {
-    const item = {getId: () => 123, asTextItem: () => item, createResponse: value => value,
-      setTitle: () => item, setRequired: () => item};
+    const item = {getId: () => 123, asTextItem: () => item, createResponse: value => value};
     const responses = [];
     const api = {
-      getItems: () => [item], getItemById: () => item, addTextItem: () => item,
-      getId: () => id, getPublishedUrl: () => publicUrl, setDescription: () => api,
-      setCollectEmail: () => api, setPublishingSummary: () => api, setLimitOneResponsePerUser: () => api,
-      setConfirmationMessage: () => api, createResponse: () => ({withItemResponse: value => ({
+      getItems: () => [item], getItemById: () => item,
+      getId: () => id, getPublishedUrl: () => publicUrl,
+      createResponse: () => ({withItemResponse: value => ({
         toPrefilledUrl: () => publicUrl + '?' + entry + '=' + encodeURIComponent(value)
       })}),
       getResponses: since => responses.filter(r => !since || r.getTimestamp() >= since),
@@ -35,7 +33,7 @@ function fixture() {
     Date: class extends Date { static now() { return state.now; } },
     console: {warn() {}, error: message => state.errors.push(message)},
     PropertiesService: {getScriptProperties: () => store},
-    FormApp: {ItemType: {TEXT: 'TEXT'}, getActiveForm: () => signup, create: () => optOut,
+    FormApp: {ItemType: {TEXT: 'TEXT'}, getActiveForm: () => signup,
       openById: id => ({signup, optOut})[id]},
     Utilities: {getUuid: () => 'test-secret', base64EncodeWebSafe: bytes => bytes.toString('base64url'),
       computeHmacSha256Signature: (email, secret) => createHmac('sha256', secret).update(email).digest()},
@@ -61,6 +59,9 @@ test('one welcome, published editions only, retries, and unsubscribe', () => {
   setup();
   setup();
   assert.equal(state.triggers.length, 1);
+  // Simulate an existing installation with unsubscribe links already sent.
+  const config = JSON.parse(state.records.config);
+  state.records.config = JSON.stringify({...config, optOutId: 'optOut', codeItem: 123});
   state.now += 1000;
   signup.respond(' Reader@example.org ');
   signup.respond('reader@example.org');
@@ -72,8 +73,7 @@ test('one welcome, published editions only, retries, and unsubscribe', () => {
   assert.equal(welcome.to, 'reader@example.org');
   assert.ok(welcome.body.includes(feed.pick.title) && welcome.body.includes(feed.pick.author));
   assert.ok(welcome.body.includes(feed.pick.reader));
-  const token = new URL(welcome.body.split('Unsubscribe: ')[1]).searchParams.get('entry.456');
-  assert.match(token, /^[\w-]{43}$/);
+  const token = createHmac('sha256', config.secret).update(welcome.to).digest('base64url');
   feed.issues.unshift({slug: 'new-edition', title: 'New Edition', date: 'Winter 2027', readable: false});
   state.live = true;
   run();
@@ -110,6 +110,10 @@ test('one welcome, published editions only, retries, and unsubscribe', () => {
   feed.issues.push({slug: 'themed-new', title: 'Themed Edition', date: 'Spring 2027', readable: true});
   run();
   assert.deepEqual(state.mail.slice(4).map(m => m.to).sort(), ['archive-reader@example.org', 'late@example.org']);
+  for (const letter of state.mail) {
+    assert.ok(letter.body.endsWith('Reply with UNSUBSCRIBE to stop receiving these emails.'));
+    assert.doesNotMatch(letter.body, /Unsubscribe: https?:\/\//);
+  }
 });
 
 test('quota rejections resume, uncertain handoffs stay held, and concurrent checks skip sending', () => {

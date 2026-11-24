@@ -32,15 +32,9 @@ function setupNewsletter() {
       throw new Error('This is a different form. Open Apps Script from the Anemone newsletter signup form.');
     }
     if (!store.getProperty('config')) {
-      const optOut = FormApp.create('Unsubscribe from Anemone Magazine', true);
-      optOut.setDescription('Select Submit to stop receiving Anemone’s newsletter. Your unsubscribe code is already filled in.')
-        .setCollectEmail(false).setPublishingSummary(false).setLimitOneResponsePerUser(false)
-        .setConfirmationMessage('Your unsubscribe request was received. Thank you for reading Anemone.');
-      const code = optOut.addTextItem().setTitle('Unsubscribe code').setRequired(true);
-      const link = optOut.createResponse().withItemResponse(code.createResponse('ANEMONETOKEN')).toPrefilledUrl();
       store.setProperty('config', JSON.stringify({
-        signupId: form.getId(), emailItem: emailQuestion.getId(), optOutId: optOut.getId(), codeItem: code.getId(),
-        link, secret: Utilities.getUuid(), started: Date.now(), archive: data.issues.map(issue => issue.slug)
+        signupId: form.getId(), emailItem: emailQuestion.getId(), secret: Utilities.getUuid(),
+        started: Date.now(), archive: data.issues.map(issue => issue.slug)
       }));
     }
     if (!ScriptApp.getProjectTriggers().some(trigger => trigger.getHandlerFunction() === 'runNewsletter')) {
@@ -79,6 +73,8 @@ function syncReaders_(store, config) {
       store.setProperty(key, JSON.stringify({email, joined, welcomed: joined < config.started, lastIssue: 0}));
     }
   });
+  // Honor links from emails sent before the switch to unsubscribe by reply.
+  if (!config.optOutId) return;
   readResponses_(store, config.optOutId, config.codeItem, token => {
     if (!/^[A-Za-z0-9_-]{43}$/.test(token)) return;
     const key = 'reader.' + token;
@@ -142,8 +138,8 @@ function runNewsletter() {
       if (reader.stopped || reader.pending) continue;
       const letter = nextLetter_(reader, feed, releases);
       if (!letter) continue;
-      const unsubscribe = config.link.replace('ANEMONETOKEN', key.slice('reader.'.length));
-      const body = letter.text + '\n\nThe editors at Anemone Magazine\n\nUnsubscribe: ' + unsubscribe;
+      const body = letter.text + '\n\nThe editors at Anemone Magazine' +
+        '\n\nReply with UNSUBSCRIBE to stop receiving these emails.';
       // MailApp has no idempotency key. Persist the claim before handing it a message.
       reader.pending = letter.id;
       store.setProperty(key, JSON.stringify(reader));
