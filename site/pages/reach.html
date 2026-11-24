@@ -1,0 +1,17 @@
+<header class="page-heading page-heading-art reach-heading wrap">
+  <div class="page-intro">
+    <h1>Anemone around the world.</h1>
+    <p class="lede">Explore the countries our contributors call home and where our readers find us.</p>
+  </div>
+  {{page_artwork}}
+</header>
+<section class="wrap section reach" aria-label="Magazine reach by country">
+  <fieldset class="reach-switcher">
+    <legend class="visually-hidden">Choose an audience</legend>
+    <input class="visually-hidden" type="radio" name="reach-audience" id="show-contributors" checked>
+    <label for="show-contributors">Contributors</label>
+    <input class="visually-hidden" type="radio" name="reach-audience" id="show-readers">
+    <label for="show-readers">Readers</label>
+    {{reach_audiences}}
+  </fieldset>
+</section>

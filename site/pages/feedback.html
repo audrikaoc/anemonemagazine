@@ -1,0 +1,18 @@
+<div class="wrap">
+  <header class="page-heading">
+    <h1 id="feedback-title">Feedback.</h1>
+    <p class="lede">What’s working well for you on Anemone? Tell us what we could improve about the site, the magazine, or our writing resources.</p>
+  </header>
+  <div class="content-layout">
+    <form class="google-form feedback-form" data-google-form="feedback" action="{{feedback_action}}" method="post" target="_blank" rel="noopener" aria-labelledby="feedback-title">
+      <div class="feedback-fields">
+        <label for="feedback-message">Your feedback</label>
+        <textarea id="feedback-message" name="{{feedback_field}}" rows="7" aria-describedby="feedback-status" data-required-message="Enter your feedback before sending." required></textarea>
+        <button class="button" type="submit">Send feedback</button>
+      </div>
+      <p class="form-status" id="feedback-status" role="status" tabindex="-1"></p>
+    </form>
+    {{page_artwork}}
+  </div>
+</div>
+<script src="{{root}}assets/google-form.js?v={{google_form_version}}" defer></script>

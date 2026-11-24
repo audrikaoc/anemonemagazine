@@ -1,0 +1,14 @@
+BEGIN:VCALENDAR
+VERSION:2.0
+PRODID:-//Anemone Magazine//Submission Deadlines//EN
+CALSCALE:GREGORIAN
+BEGIN:VEVENT
+UID:issue-11-deadline@anemonemagazine.com
+DTSTAMP:20261122T000000Z
+DTSTART;VALUE=DATE:20261212
+DTEND;VALUE=DATE:20261213
+SUMMARY:Anemone Issue 11 submission deadline
+URL:https://www.anemonemagazine.com/upcoming-issues/#issue-11
+TRANSP:TRANSPARENT
+END:VEVENT
+END:VCALENDAR

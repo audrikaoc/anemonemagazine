@@ -1,0 +1,22 @@
+{
+  "updated": "2026-11-22",
+  "calls": [
+    {
+      "id": "issue-11",
+      "title": "Issue 11",
+      "label": "General issue",
+      "description": "Send fiction, nonfiction, poetry, art, or photography on a subject of your choice.",
+      "opens": "2026-10-12",
+      "closes": "2026-12-12",
+      "release": "2026-12-20",
+      "form": "https://docs.google.com/forms/d/e/1FAIpQLScBDZBP62yjk35koupI469VNQMugYMQ_k16adhq9938Uoc5Bg/viewform",
+      "form_note": "Google sign-in required."
+    },
+    {
+      "id": "themed-6",
+      "title": "Seasons",
+      "label": "Themed issue 6",
+      "description": "What does each season feel like to you? This issue will publish two pieces for each season."
+    }
+  ]
+}
