@@ -46,7 +46,9 @@ GitHub runs the internal link checker and checks that the generated pages match 
 
 If the email does not arrive, open **Apps Script → Executions** and select the **runNewsletter** entry after the signup. A failed run shows its error there. A completed run may have skipped the address, for example if it was already on the list before setup. In the receiving Gmail account, search `in:anywhere subject:"Welcome to Anemone Magazine"` to include Spam and Trash.
 
-The welcome letter uses the homepage’s featured Editor’s Pick. Readers who signed up before activation receive future issues. Each newsletter goes to one reader and invites them to reply to unsubscribe. Links in earlier emails still work through the original unsubscribe form. Repeat signups do not generate another welcome or undo an unsubscribe.
+The welcome letter opens the homepage’s featured Editor’s Pick on its page in the original Canva issue. For each new pick, set `canva_page_id` in `site/editors-picks.json` to the part after `#page-` in the Canva page link. Test the resulting link in a private browser window. [Canva’s page sharing guide](https://www.canva.com/en_au/help/share-via-link-or-email/#share-a-specific-page-via-links)
+
+Readers who signed up before activation receive future issues. Each newsletter goes to one reader and invites them to reply to unsubscribe. Links in earlier emails still work through the original unsubscribe form. Repeat signups do not generate another welcome or undo an unsubscribe.
 
 To process an unsubscribe reply, open **Apps Script → Project Settings → Script Properties** and find the `reader.` row whose value contains the subscriber’s email address. Keep the key and replace its value with `{"stopped":true}`, then save. This removes the email address from that delivery record and suppresses future sends.
 

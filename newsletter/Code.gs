@@ -103,12 +103,11 @@ function publishedIssues_(store, config, feed, records) {
 function nextLetter_(reader, feed, releases) {
   if (!reader.welcomed) {
     const pick = feed.data.pick;
-    if (!pick) return null;
-    const url = feed.base ? feed.base + 'editors-picks/' + encodeURIComponent(pick.slug) + '/' : pick.reader;
+    if (!pick || !/^https:\/\/www\.canva\.com\/design\/[^#]+#page-[\w-]+$/.test(pick.reader)) return null;
     return {id: 'welcome', subject: 'Welcome to Anemone Magazine',
       text: 'Thank you for joining Anemone, a literary magazine for young writers and artists. ' +
         'We picked a piece for your first visit: “' + pick.title + '” by ' + pick.author + '.\n\n' +
-        pick.summary + '\n\nRead “' + pick.title + '” here: ' + url +
+        pick.summary + '\n\nRead “' + pick.title + '” in the original issue on Canva: ' + pick.reader +
         '\n\nWe’ll write again when a new issue comes out.'};
   }
   const issue = releases.find(item => item.number > reader.lastIssue && item.at >= reader.joined);

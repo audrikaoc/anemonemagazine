@@ -368,14 +368,23 @@ def build():
     if spotlight_slug := data.get('spotlight_pick'):
         spotlight = {pick['slug']: pick for pick in picks}[spotlight_slug]
     more_picks = [pick for pick in picks if pick != spotlight][:3]
+    issues = {issue['slug']: issue for issue in data['issues']}
+    newsletter_pick = None
+    if spotlight:
+        issue_reader = issues[spotlight['issue']].get('reader', '').split('#', 1)[0]
+        page_id = spotlight.get('canva_page_id', '')
+        if not issue_reader.startswith('https://www.canva.com/design/') or not re.fullmatch(r'[A-Za-z0-9_-]+', page_id):
+            raise ValueError(f'Add the Canva reader URL and Canva page ID for spotlight pick {spotlight["slug"]}')
+        newsletter_pick = {key: spotlight[key] for key in ('slug', 'title', 'author', 'summary')}
+        newsletter_pick['reader'] = f'{issue_reader}#page-{page_id}'
     newsletter = {
         'signup_form': data['newsletter_google_form']['url'],
         'email_field': data['newsletter_google_form']['email_field'],
-        'pick': {key: spotlight[key] for key in ('slug', 'title', 'author', 'summary', 'reader')} if spotlight else None,
+        'pick': newsletter_pick,
         'issues': [
             {'slug': issue['slug'], 'title': issue['title'], 'date': issue['date'],
              'readable': bool(issue.get('reader') or issue.get('contents'))}
-            for issue in data['issues']
+            for issue in issues.values()
         ],
     }
     write_page(OUTPUT / 'newsletter.json', json.dumps(newsletter, ensure_ascii=False, indent=2) + '\n')
@@ -384,7 +393,6 @@ def build():
     calls = calendar_calls(schedule['calls'], data['instagram'])
     has_calendar = write_calendar(schedule, OUTPUT, DOMAIN)
     layout = (SOURCE / 'layout.html').read_text(encoding='utf-8')
-    issues = {issue['slug']: issue for issue in data['issues']}
     issue_series = {
         'general': [issue for issue in issues.values() if 'theme' not in issue],
         'themed': [issue for issue in issues.values() if 'theme' in issue],
