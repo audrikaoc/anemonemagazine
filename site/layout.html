@@ -13,7 +13,7 @@
   <meta property="og:image" content="{{social_image}}">
   <link rel="icon" href="{{root}}assets/flower.svg" type="image/svg+xml">
   <link rel="stylesheet" href="{{root}}assets/site.css?v={{stylesheet_version}}">
-</head>
+{{analytics_script}}</head>
 <body>
   <a class="skip-link" href="#main">Skip to content</a>
   <header class="site-header">
@@ -40,11 +40,9 @@
         <li><a href="{{instagram}}">Instagram</a></li>
         <li><a href="{{root}}faqs/">FAQs</a></li>
         <li><a href="{{root}}privacy-policy/">Privacy policy</a></li>
-{{analytics_preferences}}
       </ul>
     </div>
   </footer>
-{{analytics_notice}}
   <script>
     document.getElementById('copyright-year').textContent = `${new Date().getFullYear()} `;
   </script>

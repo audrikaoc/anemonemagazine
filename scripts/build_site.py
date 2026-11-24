@@ -351,7 +351,6 @@ def build():
     analytics_id = data.get('analytics_measurement_id') or ''
     if analytics_id and not re.fullmatch(r'G-[A-Z0-9]+', analytics_id):
         raise ValueError('Set analytics_measurement_id to a Google Analytics 4 Measurement ID beginning with G-')
-    analytics_notice = (SOURCE / 'analytics.html').read_text(encoding='utf-8') if analytics_id else ''
     analytics_version = asset_version('analytics.js') if analytics_id else ''
     picks = json.loads((SOURCE / 'editors-picks.json').read_text(encoding='utf-8'))
     spotlight = next(iter(picks), None)
@@ -409,7 +408,10 @@ def build():
         image = f'assets/images/{image_file}'
         if cover_file := issue.get('cover'):
             image = f'assets/covers/{cover_file}'
-        has_analytics = analytics_id and redirect is None and not page_missing
+        analytics_script = ''
+        if analytics_id and redirect is None and not page_missing:
+            analytics_script = (f'  <script src="{root}assets/analytics.js?v={analytics_version}" '
+                                f'data-measurement-id="{analytics_id}" defer></script>\n')
         context = {
             **external_links,
             'root': root,
@@ -420,12 +422,7 @@ def build():
             'stylesheet_version': stylesheet_version,
             'navigation': navigation,
             'submission_current': ' aria-current="page"' if slug == 'submissions' else '',
-            'analytics_preferences': ('        <li hidden><button type="button" id="analytics-preferences" '
-                                      'aria-controls="analytics-notice" aria-expanded="false">Analytics preferences</button></li>')
-                                     if has_analytics else '',
-            'analytics_notice': analytics_notice.rstrip() if has_analytics else '',
-            'analytics_id': analytics_id,
-            'analytics_version': analytics_version,
+            'analytics_script': analytics_script,
             'body': body,
         }
         html = substitute(substitute(layout, context), context)
