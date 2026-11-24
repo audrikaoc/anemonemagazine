@@ -334,7 +334,7 @@ def issue_body(issue, default_artwork):
             entries = ''.join(f'<li>{escape(piece)} <span>{escape(author)}</span></li>' for piece, author in pieces)
             sections.append(f'<section><h3>{escape(group)}</h3><ul>{entries}</ul></section>')
         contents = '\n    <div id="contents" class="prose issue-contents"><h2>In this issue</h2>' + ''.join(sections) + '</div>'
-    return f'''<article class="wrap issue-detail">
+    return f'''<article class="wrap issue-detail" data-issue-slug="{escape(issue['slug'])}">
   <div class="issue-detail-copy">
     <a class="back text-link" href="../issues/">All issues</a>
     <p class="eyebrow">{escape(metadata(issue))}</p>

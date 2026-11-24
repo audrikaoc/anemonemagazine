@@ -30,6 +30,14 @@ GitHub runs the internal link checker and checks that the generated pages match 
 - The tag measures views automatically on published magazine pages. The local preview stays out of the reports.
 - After deployment, open the site and confirm the page view in the GA4 **Realtime** report. [Realtime report guide](https://support.google.com/analytics/answer/9271392)
 
+| Event | When it fires |
+| --- | --- |
+| `issue_open` | A reader opens an issue page on Anemone. Includes `issue_slug`. |
+| `submission_form_click` | A reader follows an issue submission form link from the calendar. Includes `submission_call`. |
+| `newsletter_signup_request` | The browser completes the newsletter form request. Google Forms records subscriptions separately. |
+
+In **Realtime**, use **Event count by Event name** to check the events. To break counts down by edition or call, add `issue_slug` and `submission_call` as event-scoped custom dimensions. These events use public issue and call IDs. Newsletter email addresses and form answers stay out of the event data. [GA4 custom dimensions](https://support.google.com/analytics/answer/14240153)
+
 ## Connect the newsletter signup
 
 - Publish a Google Form with one required short-answer email question and set its response validation to email format. Give anyone with the link responder access. Keep **Collect email addresses**, **Limit to 1 response**, and **View results summary** off. [Google Forms publishing guide](https://support.google.com/docs/answer/2839588)

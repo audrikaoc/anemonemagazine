@@ -48,6 +48,7 @@
     try {
       await fetch(form.action, { method: 'POST', mode: 'no-cors', body, signal: controller.signal });
       // Google Forms returns an opaque response to the site.
+      if (subject === 'newsletter signup') window.gtag?.('event', 'newsletter_signup_request');
       form.reset();
       status.dataset.state = 'sent';
       status.textContent = `Thanks! Your ${subject} was sent.`;
