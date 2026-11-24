@@ -24,6 +24,12 @@ Visit `http://127.0.0.1:8017/` to preview. The local server serves fresh files o
 
 GitHub runs the internal link checker and checks that the generated pages match their source on each push and pull request.
 
+## Google Analytics
+
+- Set `analytics_measurement_id` in `site/magazine.json` to the Anemone GA4 web stream Measurement ID, then rebuild the site. [Find your Measurement ID](https://support.google.com/analytics/answer/12270356)
+- The tag measures published magazine pages after readers allow analytics. Visitors can change their choice through **Analytics preferences** in the footer. The local preview stays out of the reports.
+- After deployment, open the site, choose **Allow analytics**, and confirm the page view in the GA4 **Realtime** report. [Realtime report guide](https://support.google.com/analytics/answer/9271392)
+
 ## Connect the newsletter signup
 
 - Publish a Google Form with one required short-answer email question and set its response validation to email format. Give anyone with the link responder access. Keep **Collect email addresses**, **Limit to 1 response**, and **View results summary** off. [Google Forms publishing guide](https://support.google.com/docs/answer/2839588)

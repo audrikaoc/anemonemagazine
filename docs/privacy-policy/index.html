@@ -13,7 +13,7 @@
   <meta property="og:description" content="Learn how Anemone Magazine handles contributor information.">
   <meta property="og:image" content="https://www.anemonemagazine.com/assets/images/anemone-engraving.jpg">
   <link rel="icon" href="../assets/flower.svg" type="image/svg+xml">
-  <link rel="stylesheet" href="../assets/site.css?v=a1f2c631b315">
+  <link rel="stylesheet" href="../assets/site.css?v=fda1a5e71f1b">
 </head>
 <body>
   <a class="skip-link" href="#main">Skip to content</a>
@@ -28,13 +28,13 @@
 <header class="page-heading page-heading-art wrap">
   <div class="page-intro">
     <h1>Privacy policy.</h1>
-    <p class="lede">Anemone Magazine · Effective October 16, 2024</p>
+    <p class="lede">Anemone Magazine · Updated November 23, 2026</p>
   </div>
   <img class="page-art" src="../assets/images/anemone-engraving.jpg" alt="" width="960" height="640" decoding="async">
 </header>
 <div class="wrap prose-block">
   <div class="prose">
-    <p>This policy covers the information Anemone Magazine receives when you submit work for publication.</p>
+    <p>This policy covers the information Anemone Magazine receives when you submit work for publication or allow website analytics.</p>
     <h2>Information we collect</h2>
     <p>We receive your name, email address, any other details you provide with your submission, and the work itself.</p>
     <h2>How we use your information</h2>
@@ -45,8 +45,9 @@
     <p>We take measures to safeguard personal information from unauthorized access, disclosure, alteration, and destruction. No online transmission or storage method is completely secure.</p>
     <h2>Your rights and choices</h2>
     <p>Parents and guardians can request access to, correction of, or deletion of a child’s personal information. They can also withdraw consent. We’ll stop processing the information and delete it unless retention is required for legal or business purposes.</p>
-    <h2>Cookies and tracking</h2>
-    <p>Anemone doesn’t add tracking scripts to this site. The linked services for reading issues and sending submissions have their own privacy policies.</p>
+    <h2 id="analytics">Analytics cookies</h2>
+    <p>If you allow analytics, Google Analytics uses cookies to help us understand which pages readers visit and how they find the magazine. Use Analytics preferences in the footer to change your choice at any time. Learn how <a href="https://policies.google.com/technologies/partner-sites">Google uses data from sites that use its services</a>.</p>
+    <p>The linked services for reading issues and sending submissions have their own privacy policies.</p>
     <h2>Changes and contact</h2>
     <p>We’ll post updates to this policy on this page. To ask a privacy question or make a request, email <a href="mailto:anemonemagazin@gmail.com">anemonemagazin@gmail.com</a>.</p>
   </div>
@@ -67,9 +68,21 @@
         <li><a href="https://www.instagram.com/anemone_magazine/">Instagram</a></li>
         <li><a href="../faqs/">FAQs</a></li>
         <li><a href="../privacy-policy/">Privacy policy</a></li>
+        <li hidden><button type="button" id="analytics-preferences" aria-controls="analytics-notice" aria-expanded="false">Analytics preferences</button></li>
       </ul>
     </div>
   </footer>
+<section class="analytics-notice" id="analytics-notice" aria-labelledby="analytics-title" hidden>
+  <div>
+    <h2 id="analytics-title" tabindex="-1">Analytics cookies</h2>
+    <p>Google Analytics helps us understand which pages readers visit. <a href="../privacy-policy/#analytics">About analytics</a></p>
+  </div>
+  <div class="analytics-actions">
+    <button class="button" type="button" data-analytics-choice="denied">Decline</button>
+    <button class="button" type="button" data-analytics-choice="granted">Allow analytics</button>
+  </div>
+</section>
+<script src="../assets/analytics.js?v=d0d8c1e01815" data-measurement-id="G-NHTWXXPQND" defer></script>
   <script>
     document.getElementById('copyright-year').textContent = `${new Date().getFullYear()} `;
   </script>
