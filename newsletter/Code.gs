@@ -84,18 +84,15 @@ function syncReaders_(store, config) {
 
 function publishedIssues_(store, config, feed, records) {
   const releases = Object.keys(records).filter(key => key.startsWith('issue.'))
-    .map(key => JSON.parse(records[key])).sort((a, b) => a.number - b.number);
-  // The repository copy can supply the welcome pick before launch. Only a live site announces issues.
-  if (feed.base) {
-    for (const issue of feed.data.issues.slice().reverse()) {
-      const key = 'issue.' + issue.slug;
-      if (!issue.readable || records[key] || config.archive.includes(issue.slug)) continue;
-      const release = {number: releases.length + 1, at: Date.now(), title: issue.title, date: issue.date,
-        url: feed.base + encodeURIComponent(issue.slug) + '/'};
-      store.setProperty(key, JSON.stringify(release));
-      records[key] = JSON.stringify(release);
-      releases.push(release);
-    }
+    .map(key => ({...JSON.parse(records[key]), slug: key.slice('issue.'.length)}))
+    .sort((a, b) => a.number - b.number);
+  for (const issue of feed.data.issues.slice().reverse()) {
+    const key = 'issue.' + issue.slug;
+    if (!issue.readable || records[key] || config.archive.includes(issue.slug)) continue;
+    const release = {number: releases.length + 1, at: Date.now(), title: issue.title, date: issue.date, slug: issue.slug};
+    store.setProperty(key, JSON.stringify(release));
+    records[key] = JSON.stringify(release);
+    releases.push(release);
   }
   return releases;
 }
@@ -103,18 +100,20 @@ function publishedIssues_(store, config, feed, records) {
 function nextLetter_(reader, feed, releases) {
   if (!reader.welcomed) {
     const pick = feed.data.pick;
-    if (!pick || !/^https:\/\/www\.canva\.com\/design\/[^#]+#page-[\w-]+$/.test(pick.reader)) return null;
+    if (!pick) return null;
+    const url = feed.base + 'editors-picks/' + encodeURIComponent(pick.slug) + '/';
     return {id: 'welcome', subject: 'Welcome to Anemone Magazine',
       text: 'Thank you for joining Anemone, a literary magazine for young writers and artists. ' +
         'We picked a piece for your first visit: “' + pick.title + '” by ' + pick.author + '.\n\n' +
-        pick.summary + '\n\nRead “' + pick.title + '” in the original issue on Canva: ' + pick.reader +
+        pick.summary + '\n\nRead “' + pick.title + '” on Anemone: ' + url +
         '\n\nWe’ll write again when a new issue comes out.'};
   }
   const issue = releases.find(item => item.number > reader.lastIssue && item.at >= reader.joined);
   if (!issue) return null;
+  const url = feed.base + encodeURIComponent(issue.slug) + '/';
   return {id: 'issue-' + issue.number, number: issue.number, subject: issue.title + ' is out · Anemone Magazine',
     text: 'Our ' + issue.date + ' edition, ' + issue.title + ', is ready to read. ' +
-      'Spend a little time with the young writers and artists in its pages.\n\nOpen the issue: ' + issue.url};
+      'Spend a little time with the young writers and artists in its pages.\n\nOpen the issue: ' + url};
 }
 
 function runNewsletter() {
@@ -127,6 +126,10 @@ function runNewsletter() {
     if (!config) throw new Error('Run setupNewsletter first.');
     syncReaders_(store, config);
     const feed = readNewsletter_();
+    if (!feed.base) {
+      console.info('Newsletter delivery is waiting for the public Anemone site.');
+      return;
+    }
     const records = store.getProperties();
     const releases = publishedIssues_(store, config, feed, records);
     let remaining = MailApp.getRemainingDailyQuota();

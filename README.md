@@ -46,13 +46,15 @@ GitHub runs the internal link checker and checks that the generated pages match 
 
 If the email does not arrive, open **Apps Script → Executions** and select the **runNewsletter** entry after the signup. A failed run shows its error there. A completed run may have skipped the address, for example if it was already on the list before setup. In the receiving Gmail account, search `in:anywhere subject:"Welcome to Anemone Magazine"` to include Spam and Trash.
 
-The welcome letter opens the homepage’s featured Editor’s Pick on its page in the original Canva issue. For each new pick, set `canva_page_id` in `site/editors-picks.json` to the part after `#page-` in the Canva page link. Test the resulting link in a private browser window. [Canva’s page sharing guide](https://www.canva.com/en_au/help/share-via-link-or-email/#share-a-specific-page-via-links)
+The welcome email opens the featured Editor’s Pick on Anemone. The pick page can link to its exact page in the original Canva issue. To add that button, set `canva_page_id` in `site/editors-picks.json` to the part after `#page-` in the Canva page link. Test the resulting link in a private browser window. [Canva’s page sharing guide](https://www.canva.com/en_au/help/share-via-link-or-email/#share-a-specific-page-via-links)
 
 Readers who signed up before activation receive future issues. Each newsletter goes to one reader and invites them to reply to unsubscribe. Links in earlier emails still work through the original unsubscribe form. Repeat signups do not generate another welcome or undo an unsubscribe.
 
 To process an unsubscribe reply, open **Apps Script → Project Settings → Script Properties** and find the `reader.` row whose value contains the subscriber’s email address. Keep the key and replace its value with `{"stopped":true}`, then save. This removes the email address from that delivery record and suppresses future sends.
 
-To announce an issue, publish its archive entry with a reader link or table of contents and keep its slug stable. The site build generates `docs/newsletter.json`. Delivery checks the live magazine domain and GitHub Pages for new, readable issues. Archive entries present at setup, later copy edits, and submission calls do not trigger mail. Before the site goes live, the script can still send welcome letters using the reading link in the GitHub copy.
+To announce an issue, publish its archive entry with a reader link or table of contents and keep its slug stable. The announcement opens the issue page on Anemone. Archive entries present at setup, later copy edits, and submission calls do not trigger mail.
+
+The build generates `docs/newsletter.json`. The script prefers the custom domain and uses the published GitHub Pages site if that is where the feed is available. Signups can accumulate before launch. Welcome and issue emails wait for a public site so their links work for recipients.
 
 Google MailApp sends under the account that installed the trigger. When the account reaches its daily recipient limit, later checks pick up outstanding mail as quota becomes available. This setup is intended for a small list. Subscriber state is stored privately in the Apps Script project and is subject to Google’s script-property storage limit. [MailApp reference](https://developers.google.com/apps-script/reference/mail/mail-app) · [Google quotas](https://developers.google.com/apps-script/guides/services/quotas)
 

@@ -152,6 +152,14 @@ def pick_spotlight(pick, root):
 def pick_body(pick, issue, root, graphic):
     title = escape(pick['title'])
     reader = escape(pick['reader'])
+    reading_link = reader
+    reading_label = 'Read the full piece'
+    if page_id := pick.get('canva_page_id'):
+        issue_reader = issue.get('reader', '').split('#', 1)[0]
+        if not issue_reader.startswith('https://www.canva.com/design/') or not re.fullmatch(r'[A-Za-z0-9_-]+', page_id):
+            raise ValueError(f'Check the Canva reader URL and page ID for {pick["slug"]}')
+        reading_link = escape(f'{issue_reader}#page-{page_id}')
+        reading_label = 'Read in the original issue'
     return f'''<article class="wrap pick-article">
   <header class="page-heading page-heading-art">
     <div class="page-intro">
@@ -161,7 +169,7 @@ def pick_body(pick, issue, root, graphic):
       <p class="pick-byline">By {escape(pick['author'])}</p>
       <p class="lede">{escape(pick['summary'])}</p>
       <div class="actions">
-        <a class="button" href="{reader}">Read the full piece</a>
+        <a class="button" href="{reading_link}">{reading_label}</a>
         <a class="text-link" href="{root}{escape(issue['slug'])}/">View {escape(issue['title'])}</a>
         <a class="text-link" href="#share-pick">Share</a>
       </div>
@@ -369,18 +377,10 @@ def build():
         spotlight = {pick['slug']: pick for pick in picks}[spotlight_slug]
     more_picks = [pick for pick in picks if pick != spotlight][:3]
     issues = {issue['slug']: issue for issue in data['issues']}
-    newsletter_pick = None
-    if spotlight:
-        issue_reader = issues[spotlight['issue']].get('reader', '').split('#', 1)[0]
-        page_id = spotlight.get('canva_page_id', '')
-        if not issue_reader.startswith('https://www.canva.com/design/') or not re.fullmatch(r'[A-Za-z0-9_-]+', page_id):
-            raise ValueError(f'Add the Canva reader URL and Canva page ID for spotlight pick {spotlight["slug"]}')
-        newsletter_pick = {key: spotlight[key] for key in ('slug', 'title', 'author', 'summary')}
-        newsletter_pick['reader'] = f'{issue_reader}#page-{page_id}'
     newsletter = {
         'signup_form': data['newsletter_google_form']['url'],
         'email_field': data['newsletter_google_form']['email_field'],
-        'pick': newsletter_pick,
+        'pick': {key: spotlight[key] for key in ('slug', 'title', 'author', 'summary')} if spotlight else None,
         'issues': [
             {'slug': issue['slug'], 'title': issue['title'], 'date': issue['date'],
              'readable': bool(issue.get('reader') or issue.get('contents'))}

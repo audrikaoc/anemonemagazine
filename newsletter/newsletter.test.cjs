@@ -31,7 +31,7 @@ function fixture() {
     setProperty: (key, value) => {state.records[key] = value;}, getProperties: () => ({...state.records})};
   const context = vm.createContext({
     Date: class extends Date { static now() { return state.now; } },
-    console: {warn() {}, error: message => state.errors.push(message)},
+    console: {info() {}, warn() {}, error: message => state.errors.push(message)},
     PropertiesService: {getScriptProperties: () => store},
     FormApp: {ItemType: {TEXT: 'TEXT'}, getActiveForm: () => signup,
       openById: id => ({signup, optOut})[id]},
@@ -41,7 +41,8 @@ function fixture() {
     ScriptApp: {getProjectTriggers: () => state.triggers, newTrigger: handler => ({timeBased() {return this;},
       everyMinutes() {return this;}, create() {state.triggers.push({getHandlerFunction: () => handler});}})},
     UrlFetchApp: {fetch: url => ({
-      getResponseCode: () => state.live || url.includes('raw.githubusercontent') ? 200 : 404,
+      getResponseCode: () => state.live || (state.githubPages && url.startsWith('https://audrikaoc.github.io/')) ||
+        url.includes('raw.githubusercontent') ? 200 : 404,
       getContentText: () => JSON.stringify(feed)
     })},
     MailApp: {getRemainingDailyQuota: () => state.quota, sendEmail: message => {
@@ -66,20 +67,18 @@ test('one welcome, published editions only, retries, and unsubscribe', () => {
   signup.respond(' Reader@example.org ');
   signup.respond('reader@example.org');
   signup.respond('wrong@example.org,other@example.org');
-  const canvaReader = feed.pick.reader;
-  feed.pick.reader = 'https://docs.google.com/document/d/old-link/preview';
   run();
   assert.equal(state.mail.length, 0);
-  feed.pick.reader = canvaReader;
+  state.githubPages = true;
   run();
   run();
   assert.equal(state.mail.length, 1);
   const welcome = state.mail[0];
   assert.equal(welcome.to, 'reader@example.org');
   assert.ok(welcome.body.includes(feed.pick.title) && welcome.body.includes(feed.pick.author));
-  assert.match(feed.pick.reader, /^https:\/\/www\.canva\.com\/design\/[^#]+#page-[\w-]+$/);
-  assert.ok(welcome.body.includes(feed.pick.reader));
-  assert.doesNotMatch(welcome.body, /docs\.google\.com\/document/);
+  const pickPath = 'editors-picks/' + feed.pick.slug + '/';
+  assert.ok(welcome.body.includes('https://audrikaoc.github.io/anemonemagazine/' + pickPath));
+  state.githubPages = false;
   const token = createHmac('sha256', config.secret).update(welcome.to).digest('base64url');
   feed.issues.unshift({slug: 'new-edition', title: 'New Edition', date: 'Winter 2027', readable: false});
   state.live = true;
@@ -93,6 +92,15 @@ test('one welcome, published editions only, retries, and unsubscribe', () => {
   state.quota = 0;
   run();
   assert.equal(state.mail.length, 1);
+  // A previous version may have recorded the issue on GitHub Pages before a domain cutover.
+  const release = JSON.parse(state.records['issue.new-edition']);
+  state.records['issue.new-edition'] = JSON.stringify({number: release.number, at: release.at, title: release.title,
+    date: release.date, url: 'https://audrikaoc.github.io/anemonemagazine/new-edition/'});
+  state.live = false;
+  state.quota = 1;
+  run();
+  assert.equal(state.mail.length, 1);
+  state.live = true;
   state.quota = 1;
   run();
   assert.equal(state.mail.length, 2);
@@ -111,7 +119,7 @@ test('one welcome, published editions only, retries, and unsubscribe', () => {
   run();
   const liveWelcome = state.mail.at(-1);
   assert.equal(liveWelcome.to, 'late@example.org');
-  assert.ok(liveWelcome.body.includes(feed.pick.reader));
+  assert.ok(liveWelcome.body.includes('https://www.anemonemagazine.com/' + pickPath));
   run();
   assert.equal(state.mail.length, 4);
   feed.issues.push({slug: 'themed-new', title: 'Themed Edition', date: 'Spring 2027', readable: true});
@@ -119,13 +127,14 @@ test('one welcome, published editions only, retries, and unsubscribe', () => {
   assert.deepEqual(state.mail.slice(4).map(m => m.to).sort(), ['archive-reader@example.org', 'late@example.org']);
   for (const letter of state.mail) {
     assert.ok(letter.body.endsWith('Reply with UNSUBSCRIBE to stop receiving these emails.'));
-    assert.doesNotMatch(letter.body, /Unsubscribe: https?:\/\//);
+    assert.doesNotMatch(letter.body, /https?:\/\/(?:www\.canva\.com|docs\.google\.com)/);
   }
 });
 
 test('quota rejections resume, uncertain handoffs stay held, and concurrent checks skip sending', () => {
   const {state, signup, setup, run} = fixture();
   setup();
+  state.live = true;
   signup.respond('reader@example.org', ++state.now);
   state.locked = true;
   run();
