@@ -89,7 +89,7 @@ If an execution reports an uncertain delivery, the script holds that reader’s 
 
 ## Migration notes
 
-- The 12 existing Canva readers and published covers are linked from individual issue pages. Issue 1 retains its contributor credits and table of contents. It and the July 2026 Pride issue need source files or fresh reading links from the editors.
+- Published Canva editions and their covers appear on the individual issue pages. Issue 1 retains its contributor credits and table of contents and still needs a public reader link.
 - The Issue 11 submission and staff application forms request Google sign-in. Workshop registration and mentor application use the original Google Forms, and the workshop menu uses the original Google Doc.
 - The homepage flower image in `docs/assets/images/anemones-daylight.jpg` is an AI-edited version of the original image generated for the redesign. Issue covers are from the magazine’s public Canva readers. Font licenses are in `docs/assets/fonts/`.
 
