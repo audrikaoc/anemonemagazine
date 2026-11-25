@@ -30,6 +30,7 @@ PAGES = {
     'faqs': ('Frequently asked questions', 'Find answers to common questions about submitting to Anemone Magazine.'),
     'feedback': ('Feedback', 'Tell the Anemone Magazine editors what’s working well and what we could improve.'),
     'privacy-policy': ('Privacy policy', 'Learn how Anemone Magazine handles contributor information.'),
+    'photo-credits': ('Photo credits', 'Meet the photographers whose anemones appear throughout the magazine.'),
 }
 NAVIGATION = {'issues': 'Issues', 'writingworkshops': 'Workshops', 'writing-resources': 'Resources',
               'masthead': 'Masthead', 'reach': 'Reach'}
@@ -59,6 +60,16 @@ def artwork(filename, root, css_class, *, lazy=False):
     loading = ' loading="lazy"' if lazy else ''
     return (f'<img class="{css_class}" src="{root}{escape(path)}" alt="" '
             f'width="960" height="640" decoding="async"{loading}>')
+
+
+def photo_credit_list(photos):
+    return '\n      '.join(
+        f'<div><dt>{escape(photo["title"])}</dt>'
+        f'<dd>Photograph by {escape(photo["photographer"])} · '
+        f'<a href="{escape(photo["source"])}">{escape(photo["source_title"])}</a> · '
+        f'<a href="{escape(photo["license_url"])}">{escape(photo["license"])}</a></dd></div>'
+        for photo in photos.values()
+    )
 
 
 def cover(issue, root, detail=False):
@@ -395,6 +406,7 @@ def build():
     calls = calendar_calls(schedule['calls'], data['instagram'])
     has_calendar = write_calendar(schedule, OUTPUT, DOMAIN)
     layout = (SOURCE / 'layout.html').read_text(encoding='utf-8')
+    photos = json.loads((SOURCE / 'photo-credits.json').read_text(encoding='utf-8'))
     issue_series = {
         'general': [issue for issue in issues.values() if 'theme' not in issue],
         'themed': [issue for issue in issues.values() if 'theme' in issue],
@@ -436,7 +448,7 @@ def build():
             current = ' aria-current="page"' if target == slug else ''
             navigation += f'<li><a href="{root}{target}/"{current}>{label}</a></li>'
         issue = issues.get(slug, {})
-        image_file = page_artwork.get(slug, issue.get('artwork', 'anemones-daylight.jpg'))
+        image_file = page_artwork.get(slug, issue.get('artwork', 'japanese-anemones.jpg'))
         image = f'assets/images/{image_file}'
         if cover_file := issue.get('cover'):
             image = f'assets/covers/{cover_file}'
@@ -482,7 +494,7 @@ def build():
             'team': team_cards(data['team'], root) if slug == 'masthead' else '',
             'reach_audiences': reach_audiences(root) if slug == 'reach' else '',
             'page_artwork': artwork(page_artwork[slug], root, 'page-art') if slug in page_artwork else '',
-            'mission_artwork': artwork('anemone-engraving.jpg', root, 'mission-art', lazy=True) if not slug else '',
+            'mission_artwork': artwork('wood-anemone.jpg', root, 'mission-art', lazy=True) if not slug else '',
             'deadline_preview': deadline_preview(schedule['calls'], root) if not slug else '',
             'newsletter_signup_form': newsletter_signup(data) if not slug else '',
             'google_form_version': google_form_version,
@@ -494,6 +506,7 @@ def build():
             'more_picks_visibility': '' if more_picks else ' hidden',
             'editors_picks': selections,
             'writing_resources': resource_cards(resources, root) if slug == 'writing-resources' else '',
+            'photo_credits': photo_credit_list(photos) if slug == 'photo-credits' else '',
         }
         render(slug, title, desc, substitute(template, keys))
 
