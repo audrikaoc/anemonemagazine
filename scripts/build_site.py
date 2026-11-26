@@ -261,6 +261,10 @@ def resource_body(resource, resources, root):
 
 def reach_audiences(root):
     data = json.loads((SOURCE / 'reach.json').read_text(encoding='utf-8'))
+    provider = data.get('map_provider', 'svg')
+    if provider not in {'svg', 'google'}:
+        raise ValueError('Set map_provider in site/reach.json to svg or google')
+    google_key = data.get('google_maps_api_key', '').strip() if provider == 'google' else ''
     asset = 'assets/world-countries.svg'
     map_svg = ElementTree.parse(OUTPUT / asset).getroot()
     by_id = {element.get('id'): element for element in map_svg.iter() if 'id' in element.attrib}
@@ -269,6 +273,12 @@ def reach_audiences(root):
         for key, element in by_id.items() if key.startswith('country-')
     }
     panels = []
+    if google_key:
+        geometry = 'world-countries.geojson'
+        markup = f'''<div class="reach-google-map" role="region" aria-label="Interactive reach map" hidden
+      data-google-maps-key="{escape(google_key)}" data-boundaries="{root}assets/{geometry}?v={asset_version(geometry)}"></div>
+    <script src="{root}assets/reach-google.js?v={asset_version('reach-google.js')}" defer></script>'''
+        panels.append(markup)
     for audience, title in [('contributors', 'Contributor countries'), ('readers', 'Reader countries')]:
         detail = data[audience]
         codes = set(detail['countries'])
@@ -281,7 +291,8 @@ def reach_audiences(root):
         if ordered:
             items = ''.join(f'<li>{escape(names[code])}</li>' for code in ordered)
             countries = f'\n      <ul class="reach-countries" aria-label="Countries shown">{items}</ul>'
-        panels.append(f'''<section class="reach-panel reach-{audience}" aria-labelledby="{audience}-title">
+        codes_attr = f' data-country-codes="{" ".join(ordered)}"' if google_key else ''
+        panels.append(f'''<section class="reach-panel reach-{audience}" aria-labelledby="{audience}-title"{codes_attr}>
       <svg class="reach-map" viewBox="{map_svg.attrib['viewBox']}" aria-hidden="true" fill-rule="evenodd">
         <use class="map-grid" href="{root}{asset}#world-graticule"/>
         <use class="map-land" href="{root}{asset}#world-land"/>

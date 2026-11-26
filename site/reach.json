@@ -1,4 +1,6 @@
 {
+  "map_provider": "svg",
+  "google_maps_api_key": "",
   "contributors": {
     "countries": ["AU", "CN", "DE", "IN", "KZ", "NG", "RS", "GB", "US"],
     "note": "Anemone Magazine has contributors from the countries shown here."

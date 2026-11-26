@@ -78,7 +78,11 @@ If an execution reports an uncertain delivery, the script holds that reader’s 
 - The initial contributor countries come from locations people shared in their bios in Issues 2, 4, 5, and 6. Update the contributor note if you change the source or scope.
 - The Readers map uses the country locations from the `Visits by Location` worksheet. The source workbook is saved locally as `data/Location_Visits.xlsx`. The public site displays the country list from `site/reach.json`.
 - For future updates, use **Analytics → Traffic → Geography** in Squarespace. Record the report date range in the reader note when it’s available. These locations are estimates based on site visits.
-- The bundled map uses [Natural Earth 1:50m map units, version 5.1.2](https://github.com/nvkelso/natural-earth-vector/blob/v5.1.2/geojson/ne_50m_admin_0_map_units.geojson). If the map data needs updating, download the GeoJSON and run `python3 scripts/make_world_map.py path/to/map-units.geojson`, then rebuild the site.
+- Both map versions use [Natural Earth 1:50m map units, version 5.1.2](https://github.com/nvkelso/natural-earth-vector/blob/v5.1.2/geojson/ne_50m_admin_0_map_units.geojson) for country highlights. To update the bundled SVG and GeoJSON, download the map units and run `python3 scripts/make_world_map.py path/to/map-units.geojson`, then rebuild the site.
+
+The `map_provider` setting in `site/reach.json` selects the map. The default value, `"svg"`, uses the existing map. To use Google Maps, enable the **Maps JavaScript API** in a Google Cloud project with billing, create a restricted browser key, and set `"map_provider": "google"` and `google_maps_api_key` in `site/reach.json`. Rebuild and publish. The audience switcher uses the same country lists in either mode. If the key is missing or Google Maps cannot load, the page uses the SVG. [Google Maps setup](https://developers.google.com/maps/documentation/javascript/get-api-key)
+
+The browser key appears in the generated page. Restrict it to the Maps JavaScript API and to the website origins you use, such as `https://www.anemonemagazine.com/*` and `https://audrikaoc.github.io/*`. To test locally with the same key, allow `http://127.0.0.1:8017/*` as well. [Google’s API key restrictions](https://developers.google.com/maps/api-security-best-practices)
 
 ## Publish to GitHub Pages
 

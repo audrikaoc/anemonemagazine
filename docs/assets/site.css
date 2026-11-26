@@ -235,6 +235,10 @@ p:last-child { margin-bottom: 0; }
 #show-contributors:checked ~ .reach-contributors,
 #show-readers:checked ~ .reach-readers { display: block; }
 .reach-map { display: block; width: 100%; max-height: 36rem; background: #edf1e8; }
+.reach-google-map { grid-column: 1 / -1; height: clamp(18rem, 50vw, 36rem); margin-top: .4rem; border: 1px solid var(--rule); background: #edf1e8; }
+.reach-google-map:not([hidden]) ~ .reach-panel { margin-top: -.5rem; border-top: 0; }
+.reach-google-map:not([hidden]) ~ .reach-panel .reach-map { display: none; }
+.reach-google-map:not([hidden]) ~ .reach-panel .reach-details { border-top: 0; }
 .map-grid { fill: none; stroke: #d7dfd3; stroke-width: .55; }
 .map-land { fill: #cbd4c4; stroke: #f1f4ee; stroke-width: .55; stroke-linejoin: round; }
 .map-highlight { fill: var(--map-highlight); stroke: #f1f4ee; stroke-width: .65; stroke-linejoin: round; }

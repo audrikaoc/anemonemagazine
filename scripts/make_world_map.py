@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-"""Create the reusable SVG map from Natural Earth 1:50m map-unit GeoJSON."""
+"""Create the SVG map and geographic overlays from Natural Earth map units."""
 
 import json
 import re
@@ -26,14 +26,14 @@ def project(longitude, latitude):
     return 500 + 175 * x, 260 - 175 * y
 
 
-def simplify(points):
-    """Drop detail smaller than a fraction of a pixel at the map’s reference size."""
+def simplify(points, tolerance=.24):
+    """Remove points whose displacement is below the tolerance."""
     if len(points) <= 2:
         return points
     x0, y0 = points[0]
     dx, dy = points[-1][0] - x0, points[-1][1] - y0
     length_squared = dx * dx + dy * dy
-    distance_limit = .24 ** 2
+    distance_limit = tolerance ** 2
     split = None
     for index, (x, y) in enumerate(points[1:-1], 1):
         fraction = ((x - x0) * dx + (y - y0) * dy) / length_squared if length_squared else 0
@@ -44,7 +44,7 @@ def simplify(points):
             distance_limit = distance
     if split is None:
         return [points[0], points[-1]]
-    return simplify(points[:split + 1])[:-1] + simplify(points[split:])
+    return simplify(points[:split + 1], tolerance)[:-1] + simplify(points[split:], tolerance)
 
 
 def path_for(coordinates, close=False):
@@ -59,10 +59,28 @@ def path_for(coordinates, close=False):
     return 'M' + ' '.join(f'{x:g},{y:g}' for x, y in points) + ('Z' if close else '')
 
 
-def land_shape(feature):
+def polygons(feature):
     geometry = feature['geometry']
-    polygons = geometry['coordinates'] if geometry['type'] == 'MultiPolygon' else [geometry['coordinates']]
-    return ''.join(path_for(ring, close=True) for polygon in polygons for ring in polygon)
+    return geometry['coordinates'] if geometry['type'] == 'MultiPolygon' else [geometry['coordinates']]
+
+
+def land_shape(feature):
+    return ''.join(path_for(ring, close=True) for polygon in polygons(feature) for ring in polygon)
+
+
+def geographic_ring(ring):
+    points = [point for point, _ in groupby((round(lon, 3), round(lat, 3)) for lon, lat in ring)]
+    if points[-1] != points[0]:
+        points.append(points[0])
+    reduced = simplify(points, .15)
+    if len(set(reduced)) >= 3:
+        return reduced
+    return points if len(set(points)) >= 3 else [tuple(point) for point in ring]
+
+
+def map_feature(code, shape, coordinates):
+    return {'type': 'Feature', 'properties': {'country': code},
+            'geometry': {'type': shape, 'coordinates': coordinates}}
 
 
 def build_map(source):
@@ -78,6 +96,7 @@ def build_map(source):
 
     paths = []
     markers = []
+    map_features = []
     for code, units in sorted(countries.items()):
         main_unit = max(units, key=lambda unit: unit['properties']['POP_EST'])['properties']
         default_name = main_unit['NAME_EN'] if len(units) == 1 else main_unit['SOVEREIGNT']
@@ -85,9 +104,17 @@ def build_map(source):
         outline = ''.join(land_shape(unit) for unit in units)
         x, y = project(main_unit['LABEL_X'], main_unit['LABEL_Y'])
         paths.append(f'      <path id="country-{code}" d="{outline}"><title>{escape(name)}</title></path>')
+        boundaries = [[geographic_ring(ring) for ring in polygon] for unit in units for polygon in polygons(unit)]
+        boundaries = [[ring for ring in polygon if len(set(ring)) >= 3]
+                      for polygon in boundaries if len(set(polygon[0])) >= 3]
+        if boundaries:
+            map_features.append(map_feature(code, 'MultiPolygon', boundaries))
         # A minimum-size marker makes a highlighted small country visible on phones.
         if main_unit['TINY'] >= 0:
             markers.append(f'    <circle id="marker-{code}" cx="{x:.1f}" cy="{y:.1f}" r="3.5"/>')
+        if main_unit['TINY'] >= 0 or not boundaries:
+            point = [round(main_unit['LABEL_X'], 3), round(main_unit['LABEL_Y'], 3)]
+            map_features.append(map_feature(code, 'Point', point))
 
     paths.extend(f'      <path d="{land_shape(feature)}"/>' for feature in other_regions)
     meridians = [path_for((lon, lat) for lat in range(-75, 86, 3)) for lon in range(-150, 151, 30)]
@@ -101,6 +128,9 @@ def build_map(source):
         + '\n'.join(markers) + '\n  </defs>\n</svg>\n',
         encoding='utf-8',
     )
+    feature_lines = ',\n'.join(json.dumps(feature, separators=(',', ':')) for feature in map_features)
+    OUTPUT.with_suffix('.geojson').write_text(
+        '{"type":"FeatureCollection","features":[\n' + feature_lines + '\n]}\n', encoding='utf-8')
 
 
 if __name__ == '__main__':
