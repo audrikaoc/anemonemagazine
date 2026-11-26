@@ -30,6 +30,7 @@ PAGES = {
     'faqs': ('Frequently asked questions', 'Find answers to common questions about submitting to Anemone Magazine.'),
     'feedback': ('Feedback', 'Tell the Anemone Magazine editors what’s working well and what we could improve.'),
     'privacy-policy': ('Privacy policy', 'Learn how Anemone Magazine handles contributor information.'),
+    'photo-credits': ('Photo credits', 'Meet the photographers whose anemones appear throughout the magazine.'),
 }
 NAVIGATION = {'issues': 'Issues', 'writingworkshops': 'Workshops', 'writing-resources': 'Resources',
               'masthead': 'Masthead', 'reach': 'Reach'}
@@ -59,6 +60,16 @@ def artwork(filename, root, css_class, *, lazy=False):
     loading = ' loading="lazy"' if lazy else ''
     return (f'<img class="{css_class}" src="{root}{escape(path)}" alt="" '
             f'width="960" height="640" decoding="async"{loading}>')
+
+
+def photo_credit_list(photos):
+    return '\n      '.join(
+        f'<div><dt>{escape(photo["title"])}</dt>'
+        f'<dd>Photograph by {escape(photo["photographer"])} · '
+        f'<a href="{escape(photo["source"])}">{escape(photo["source_title"])}</a> · '
+        f'<a href="{escape(photo["license_url"])}">{escape(photo["license"])}</a></dd></div>'
+        for photo in photos.values()
+    )
 
 
 def cover(issue, root, detail=False):
@@ -250,6 +261,10 @@ def resource_body(resource, resources, root):
 
 def reach_audiences(root):
     data = json.loads((SOURCE / 'reach.json').read_text(encoding='utf-8'))
+    provider = data.get('map_provider', 'svg')
+    if provider not in {'svg', 'google'}:
+        raise ValueError('Set map_provider in site/reach.json to svg or google')
+    google_key = data.get('google_maps_api_key', '').strip() if provider == 'google' else ''
     asset = 'assets/world-countries.svg'
     map_svg = ElementTree.parse(OUTPUT / asset).getroot()
     by_id = {element.get('id'): element for element in map_svg.iter() if 'id' in element.attrib}
@@ -258,6 +273,12 @@ def reach_audiences(root):
         for key, element in by_id.items() if key.startswith('country-')
     }
     panels = []
+    if google_key:
+        geometry = 'world-countries.geojson'
+        markup = f'''<div class="reach-google-map" role="region" aria-label="Interactive reach map" hidden
+      data-google-maps-key="{escape(google_key)}" data-boundaries="{root}assets/{geometry}?v={asset_version(geometry)}"></div>
+    <script src="{root}assets/reach-google.js?v={asset_version('reach-google.js')}" defer></script>'''
+        panels.append(markup)
     for audience, title in [('contributors', 'Contributor countries'), ('readers', 'Reader countries')]:
         detail = data[audience]
         codes = set(detail['countries'])
@@ -270,7 +291,8 @@ def reach_audiences(root):
         if ordered:
             items = ''.join(f'<li>{escape(names[code])}</li>' for code in ordered)
             countries = f'\n      <ul class="reach-countries" aria-label="Countries shown">{items}</ul>'
-        panels.append(f'''<section class="reach-panel reach-{audience}" aria-labelledby="{audience}-title">
+        codes_attr = f' data-country-codes="{" ".join(ordered)}"' if google_key else ''
+        panels.append(f'''<section class="reach-panel reach-{audience}" aria-labelledby="{audience}-title"{codes_attr}>
       <svg class="reach-map" viewBox="{map_svg.attrib['viewBox']}" aria-hidden="true" fill-rule="evenodd">
         <use class="map-grid" href="{root}{asset}#world-graticule"/>
         <use class="map-land" href="{root}{asset}#world-land"/>
@@ -395,6 +417,7 @@ def build():
     calls = calendar_calls(schedule['calls'], data['instagram'])
     has_calendar = write_calendar(schedule, OUTPUT, DOMAIN)
     layout = (SOURCE / 'layout.html').read_text(encoding='utf-8')
+    photos = json.loads((SOURCE / 'photo-credits.json').read_text(encoding='utf-8'))
     issue_series = {
         'general': [issue for issue in issues.values() if 'theme' not in issue],
         'themed': [issue for issue in issues.values() if 'theme' in issue],
@@ -436,7 +459,7 @@ def build():
             current = ' aria-current="page"' if target == slug else ''
             navigation += f'<li><a href="{root}{target}/"{current}>{label}</a></li>'
         issue = issues.get(slug, {})
-        image_file = page_artwork.get(slug, issue.get('artwork', 'anemones-daylight.jpg'))
+        image_file = page_artwork.get(slug, issue.get('artwork', 'japanese-anemones.jpg'))
         image = f'assets/images/{image_file}'
         if cover_file := issue.get('cover'):
             image = f'assets/covers/{cover_file}'
@@ -482,7 +505,7 @@ def build():
             'team': team_cards(data['team'], root) if slug == 'masthead' else '',
             'reach_audiences': reach_audiences(root) if slug == 'reach' else '',
             'page_artwork': artwork(page_artwork[slug], root, 'page-art') if slug in page_artwork else '',
-            'mission_artwork': artwork('anemone-engraving.jpg', root, 'mission-art', lazy=True) if not slug else '',
+            'mission_artwork': artwork('wood-anemone.jpg', root, 'mission-art', lazy=True) if not slug else '',
             'deadline_preview': deadline_preview(schedule['calls'], root) if not slug else '',
             'newsletter_signup_form': newsletter_signup(data) if not slug else '',
             'google_form_version': google_form_version,
@@ -494,6 +517,7 @@ def build():
             'more_picks_visibility': '' if more_picks else ' hidden',
             'editors_picks': selections,
             'writing_resources': resource_cards(resources, root) if slug == 'writing-resources' else '',
+            'photo_credits': photo_credit_list(photos) if slug == 'photo-credits' else '',
         }
         render(slug, title, desc, substitute(template, keys))
 

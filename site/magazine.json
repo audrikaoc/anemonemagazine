@@ -1,17 +1,17 @@
 {
   "page_artwork": {
-    "issues": "anemone-pressed.jpg",
-    "editors-picks": "anemone-portraits.jpg",
-    "submissions": "anemone-linocut.jpg",
-    "upcoming-issues": "anemone-dawn.jpg",
-    "writingworkshops": "anemone-watercolor.jpg",
-    "writing-resources": "anemone-pressed.jpg",
-    "masthead": "anemone-portraits.jpg",
-    "reach": "anemone-sky.jpg",
-    "faqs": "anemone-cyanotype.jpg",
-    "feedback": "anemone-watercolor.jpg",
-    "privacy-policy": "anemone-engraving.jpg",
-    "404": "anemone-pressed.jpg"
+    "issues": "anemone-meadow.jpg",
+    "editors-picks": "lilac-anemones.jpg",
+    "submissions": "scarlet-anemones.jpg",
+    "upcoming-issues": "anemone-bud.jpg",
+    "writingworkshops": "violet-anemone-detail.jpg",
+    "writing-resources": "anemone-meadow.jpg",
+    "masthead": "lilac-anemones.jpg",
+    "reach": "white-japanese-anemones.jpg",
+    "faqs": "double-blue-anemone.jpg",
+    "feedback": "violet-anemone-detail.jpg",
+    "privacy-policy": "wood-anemone.jpg",
+    "404": "anemone-meadow.jpg"
   },
   "instagram": "https://www.instagram.com/anemone_magazine/",
   "analytics_measurement_id": "G-NHTWXXPQND",
@@ -40,7 +40,7 @@
       "date": "2026",
       "reader": "https://www.canva.com/design/DAHVFZ2S-BM/V1XV8W1pD5YUxdYDLVEsgw/view?embed",
       "cover": "issue-9.jpg",
-      "artwork": "anemone-cyanotype.jpg"
+      "artwork": "double-blue-anemone.jpg"
     },
     {
       "slug": "issue-8",
@@ -48,7 +48,7 @@
       "date": "Summer 2026",
       "reader": "https://www.canva.com/design/DAHMZG_TZno/MA4q20xs4i-m5_ESjMCx8A/view?embed",
       "cover": "issue-8.jpg",
-      "artwork": "anemone-portraits.jpg"
+      "artwork": "lilac-anemones.jpg"
     },
     {
       "slug": "issue-7",
@@ -56,7 +56,7 @@
       "date": "Spring 2026",
       "reader": "https://www.canva.com/design/DAG82Ki_XR4/Ff2LQfcFS2xyNUhfICIsJw/view?embed",
       "cover": "issue-7.jpg",
-      "artwork": "anemone-sky.jpg"
+      "artwork": "white-japanese-anemones.jpg"
     },
     {
       "slug": "issue-6",
@@ -64,7 +64,7 @@
       "date": "Winter 2025",
       "reader": "https://www.canva.com/design/DAG8XjUqazQ/-EyCIwfz0T8UfPYkg4lh-w/view?embed",
       "cover": "issue-6.jpg",
-      "artwork": "anemone-watercolor.jpg"
+      "artwork": "violet-anemone-detail.jpg"
     },
     {
       "slug": "issue-5",
@@ -72,7 +72,7 @@
       "date": "Fall 2025",
       "reader": "https://www.canva.com/design/DAGzwdtOIV4/xrq_E7gSzdXrvlW34lH1-w/view?embed",
       "cover": "issue-5.jpg",
-      "artwork": "anemone-dawn.jpg"
+      "artwork": "anemone-bud.jpg"
     },
     {
       "slug": "issue-4",
@@ -80,7 +80,7 @@
       "date": "Summer 2025",
       "reader": "https://www.canva.com/design/DAGqo2exVJ4/YRe06FMYMcN4UVCrugKv7g/view?embed",
       "cover": "issue-4.jpg",
-      "artwork": "anemones-daylight.jpg"
+      "artwork": "japanese-anemones.jpg"
     },
     {
       "slug": "issue-3",
@@ -88,7 +88,7 @@
       "date": "Spring 2025",
       "reader": "https://www.canva.com/design/DAGoIhn5y_Y/vL3z5D4fY1TEBxt5BckNkQ/view?embed",
       "cover": "issue-3.jpg",
-      "artwork": "anemone-linocut.jpg"
+      "artwork": "scarlet-anemones.jpg"
     },
     {
       "slug": "issue-2",
@@ -96,7 +96,7 @@
       "date": "Winter 2024",
       "reader": "https://www.canva.com/design/DAGgEWgJTnw/lIcierXEPIDoJylHcjYxhQ/view?embed",
       "cover": "issue-2.jpg",
-      "artwork": "anemone-cyanotype.jpg"
+      "artwork": "double-blue-anemone.jpg"
     },
     {
       "slug": "issue-1",
@@ -136,7 +136,7 @@
           ]
         ]
       },
-      "artwork": "anemone-pressed.jpg"
+      "artwork": "anemone-meadow.jpg"
     },
     {
       "slug": "themed-issue-5",
@@ -145,7 +145,7 @@
       "theme": 5,
       "reader": "https://www.canva.com/design/DAHN_mLCzRk/k1zlp6m-HOSfmLriU7VLPA/view?embed",
       "cover": "themed-issue-5.jpg",
-      "artwork": "anemone-linocut.jpg"
+      "artwork": "scarlet-anemones.jpg"
     },
     {
       "slug": "themed-issue-4",
@@ -154,7 +154,7 @@
       "theme": 4,
       "reader": "https://www.canva.com/design/DAHJmxzLsaU/tI9keGuqFPQIdvR9pemYMQ/view?embed",
       "cover": "themed-issue-4.jpg",
-      "artwork": "anemone-portraits.jpg"
+      "artwork": "lilac-anemones.jpg"
     },
     {
       "slug": "themedissue3",
@@ -163,7 +163,7 @@
       "theme": 3,
       "reader": "https://www.canva.com/design/DAG86aQ7LJ0/HgE129f7pwsbECDzUbsuug/view?embed",
       "cover": "themedissue3.jpg",
-      "artwork": "anemone-engraving.jpg"
+      "artwork": "wood-anemone.jpg"
     },
     {
       "slug": "themedissue2",
@@ -172,7 +172,7 @@
       "theme": 2,
       "reader": "https://www.canva.com/design/DAG28A7iakM/v8lGWm6Y42PIlkU2Ioq4dw/view?embed",
       "cover": "themedissue2.jpg",
-      "artwork": "anemones.jpg"
+      "artwork": "backlit-pink-anemone.jpg"
     },
     {
       "slug": "themedissue1",
@@ -181,7 +181,7 @@
       "theme": 1,
       "reader": "https://www.canva.com/design/DAGr2DGrgF8/x4sb6PvdODRSQprK0VSV6w/view?embed",
       "cover": "themedissue1.jpg",
-      "artwork": "anemones-daylight.jpg"
+      "artwork": "japanese-anemones.jpg"
     }
   ],
   "team": [

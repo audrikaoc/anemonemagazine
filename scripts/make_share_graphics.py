@@ -19,12 +19,13 @@ def embedded(path, media_type):
     return f'data:{media_type};base64,{content}'
 
 
-def design(pick, serif, sans):
+def design(pick, photo, serif, sans):
     flower = embedded(ASSETS / 'images' / pick['artwork'], 'image/jpeg')
     mark = embedded(ASSETS / 'flower.svg', 'image/svg+xml')
     title = escape(pick['title'])
     byline = escape(pick['author'])
     genre = escape(pick['genre'])
+    credit = escape(f'Photo by {photo["photographer"]} · {photo["license"]}')
     title_length = len(pick['title'])
     title_size = 86 if title_length <= 24 else 68 if title_length <= 48 else 54
     return f'''<!doctype html>
@@ -41,6 +42,7 @@ body {{ width: {WIDTH}px; height: {HEIGHT}px; margin: 0; display: grid; grid-tem
 h1 {{ margin: 0; font: {title_size}px/.97 Instrument, Georgia, serif; letter-spacing: -.012em; overflow-wrap: anywhere; }}
 .author {{ margin: 20px 0 0; font-size: 29px; font-weight: 650; }}
 .footer {{ padding-top: 18px; border-top: 1px solid #cbc9b9; color: #424b3c; font-size: 19px; font-weight: 650; }}
+.photo-credit {{ margin: 6px 0 0; font-size: 16px; font-weight: 400; line-height: 1.35; }}
 .art {{ min-width: 0; height: {HEIGHT}px; padding: 32px 32px 32px 0; }}
 .art img {{ display: block; width: 100%; height: 100%; object-fit: cover; }}
 </style>
@@ -52,7 +54,9 @@ h1 {{ margin: 0; font: {title_size}px/.97 Instrument, Georgia, serif; letter-spa
       <h1>{title}</h1>
       <p class="author">By {byline}</p>
     </div>
-    <div class="footer">anemonemagazine.com</div>
+    <div class="footer">anemonemagazine.com
+      <p class="photo-credit">{credit}<br>anemonemagazine.com/photo-credits/</p>
+    </div>
   </main>
   <div class="art"><img src="{flower}" alt=""></div>
 </body></html>'''
@@ -63,6 +67,7 @@ def main():
     parser.add_argument('--browser', required=True, help='Path to a Chrome or Chromium executable')
     args = parser.parse_args()
     picks = json.loads((ROOT / 'site' / 'editors-picks.json').read_text(encoding='utf-8'))
+    photos = json.loads((ROOT / 'site' / 'photo-credits.json').read_text(encoding='utf-8'))
     serif = embedded(ASSETS / 'fonts' / 'instrument-serif.woff2', 'font/woff2')
     sans = embedded(ASSETS / 'fonts' / 'dm-sans.woff2', 'font/woff2')
     destination = ASSETS / 'share'
@@ -73,7 +78,7 @@ def main():
         for pick in picks:
             source = scratch / f'{pick["slug"]}.html'
             graphic = scratch / f'{pick["slug"]}.png'
-            source.write_text(design(pick, serif, sans), encoding='utf-8')
+            source.write_text(design(pick, photos[pick['artwork']], serif, sans), encoding='utf-8')
             subprocess.run([
                 args.browser, '--headless', '--no-first-run', '--disable-gpu', '--hide-scrollbars',
                 f'--user-data-dir={scratch / "chrome"}', f'--window-size={WIDTH},{HEIGHT}',
