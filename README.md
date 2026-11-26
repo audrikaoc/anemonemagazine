@@ -6,10 +6,12 @@ An independent literary magazine publishing fiction, nonfiction, poetry, and art
 
 - Update issue metadata, cover filenames, workshops, and Google form links in `site/magazine.json`.
 - Keep general and themed issues in newest-to-oldest order within each series in `site/magazine.json`. End each published issue’s date with its four-digit year to include it in the corresponding archive filter. Issue pages use the series order for their newer and older links.
+- To give an issue a reading guide, add a `reading_guide` to its entry in `site/magazine.json`. Set the subtitle, introduction, and pieces in publication order. Use the original Canva page ID and page number for each piece. Add `featured_note` to show a piece above the contents. When only a contents listing is available, use that listing’s Canva page ID and omit the piece page number.
 - Update page copy in `site/pages/`. Update calls and dates in `site/submission-calendar.json` and record the edit date in `updated`. Use `YYYY-MM-DD` for published dates and omit dates that are still to be announced. The build generates the calendar download and the homepage deadline from that same file.
 - Edit the downloadable Word manuscript template in `docs/assets/downloads/anemone-manuscript-template.docx` when the submission formatting guidelines change.
 - Update `site/editors-picks.json` to change the selections. Use the contributor’s published byline, issue slug, reader page number, and public reading link. Set `spotlight_pick` in `site/magazine.json` to the slug of the pick you want to feature below the homepage hero. Up to three other picks appear below the mission statement.
 - Regenerate the downloadable Editor’s Picks graphics after changing a title, byline, or selection. Run `python3 scripts/make_share_graphics.py --browser '/Applications/Google Chrome.app/Contents/MacOS/Google Chrome'`, then rebuild the site. The resulting PNGs in `docs/assets/share/` also power the link previews.
+- To generate an issue’s share graphic, add `--issue` and its slug to the same command, such as `--issue themed-issue-5`. Rebuild after generating the graphic.
 - Edit guide text in `site/resources/`. Set each guide’s title, summary, topic, and artwork in `site/writing-resources.json`.
 - Keep site assets in `docs/assets/`. Issue covers belong in `docs/assets/covers/`.
 - Run the following with Python 3.9 or later. Commit both the source edits and regenerated files in `docs/`.

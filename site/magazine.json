@@ -145,7 +145,111 @@
       "theme": 5,
       "reader": "https://www.canva.com/design/DAHN_mLCzRk/k1zlp6m-HOSfmLriU7VLPA/view?embed",
       "cover": "themed-issue-5.jpg",
-      "artwork": "scarlet-anemones.jpg"
+      "artwork": "scarlet-anemones.jpg",
+      "reading_guide": {
+        "subtitle": "Come As You Are",
+        "intro": "Come As You Are brings together work about identity, belonging, and what it means to be seen. Start with a piece below, or read the issue from cover to cover.",
+        "pieces": [
+          {
+            "title": "we’d prove sappho right",
+            "author": "samyu",
+            "page": 4,
+            "canva_page_id": "PBqMhFjTfWYLhqR9"
+          },
+          {
+            "title": "seven seconds",
+            "author": "samyu",
+            "page": 5,
+            "canva_page_id": "PBhQnR6xXMT64KBw",
+            "featured_note": "A countdown moves through ordinary moments in a relationship, making seven seconds feel big enough to hold a whole life."
+          },
+          {
+            "title": "legally, they hate us",
+            "author": "samyu",
+            "page": 6,
+            "canva_page_id": "PBplz83FrLCLsr05"
+          },
+          {
+            "title": "My Homosexual Lover And The Roach In The Corner Of The Bathroom.",
+            "author": "N.E Kiullczar",
+            "page": 7,
+            "canva_page_id": "PBLyC75hZC1lw44s"
+          },
+          {
+            "title": "unsent, for Laila",
+            "author": "Veronika Sarafaraz",
+            "page": 12,
+            "canva_page_id": "PBDB7fKhLyDNbt3d"
+          },
+          {
+            "title": "Velvet Goldmine",
+            "author": "Stephanie Gunnz",
+            "page": 14,
+            "canva_page_id": "PBKrx81STg7sQs3W",
+            "featured_note": "A performer keeps playing through hostility and doubt. The repeated call for the spotlight gives the poem the rhythm of a song."
+          },
+          {
+            "title": "Direct Pinning",
+            "author": "Ilyas Merza",
+            "page": 15,
+            "canva_page_id": "PBgDrPJqqb8Qhf8s"
+          },
+          {
+            "title": "Modernity",
+            "author": "Ilyas Merza",
+            "page": 16,
+            "canva_page_id": "PBMF76nw0L3ldcSj"
+          },
+          {
+            "title": "I’M FORGETTING A PART OF ME CALLED MAN",
+            "author": "Ifeoluwa Oluwaniran",
+            "page": 17,
+            "canva_page_id": "PBsD6pfL40HDWcNw"
+          },
+          {
+            "title": "MY MOTHER IS A SEA OF DREAMS",
+            "author": "Ifeoluwa Oluwaniran",
+            "page": 18,
+            "canva_page_id": "PB6SmZL0pnY0Pp58"
+          },
+          {
+            "title": "I ONCE DREAMED OF DYING",
+            "author": "Ifeoluwa Oluwaniran",
+            "canva_page_id": "PBnmyqw3NR8fxZY0"
+          },
+          {
+            "title": "the big bang of march 12",
+            "author": "Bailey Flaherty",
+            "page": 20,
+            "canva_page_id": "PBnLxHN4tN13Gh5h"
+          },
+          {
+            "title": "As it is in heaven",
+            "author": "Lucy Hopper",
+            "page": 23,
+            "canva_page_id": "PB0THyDwWmDpLH0d"
+          },
+          {
+            "title": "SANCTUARY",
+            "author": "Chloe Amara",
+            "page": 25,
+            "canva_page_id": "PBQBx92Jl2R6v74G"
+          },
+          {
+            "title": "France as a Critically Black, Gay American",
+            "author": "DeAndre Holmes",
+            "page": 26,
+            "canva_page_id": "PBgvdbGf8DCQ03y1"
+          },
+          {
+            "title": "Starting Over on the Bus to Seattle",
+            "author": "Marqueen Gluck",
+            "page": 35,
+            "canva_page_id": "PBVwd913XWKBwykJ",
+            "featured_note": "A bus leaves a small town at dawn. The ride to Seattle gives the uncertainty of starting over a concrete shape."
+          }
+        ]
+      }
     },
     {
       "slug": "themed-issue-4",

@@ -1,0 +1,46 @@
+<article class="wrap reading-guide" data-issue-slug="{{issue_slug}}">
+  <header class="reading-guide-hero">
+    <div class="reading-guide-intro">
+      <a class="text-link pick-back" href="{{root}}issues/">All issues</a>
+      <p class="eyebrow">{{issue_metadata}}</p>
+      <h1>{{issue_title}}</h1>
+      <p class="reading-guide-subtitle">{{issue_subtitle}}</p>
+      <p class="lede">{{issue_intro}}</p>
+      <div class="actions">
+        <a class="button" href="{{issue_reader}}">Read the full issue</a>
+        <a class="text-link" href="#contents">Browse the contents</a>
+      </div>
+    </div>
+    <figure class="reading-guide-cover">{{issue_cover}}</figure>
+  </header>
+  <section class="section" aria-labelledby="featured-pieces">
+    <header class="section-heading">
+      <h2 id="featured-pieces">Start with these pieces</h2>
+    </header>
+    <div class="reading-guide-features">
+      {{issue_features}}
+    </div>
+  </section>
+  <div class="content-layout reading-guide-details">
+    <section aria-labelledby="contents">
+      <h2 id="contents">In this issue</h2>
+      <ol class="reading-guide-toc">
+        {{issue_toc}}
+      </ol>
+    </section>
+    <aside class="aside-panel pick-share" aria-labelledby="share-issue">
+      <h2 id="share-issue">Share this issue</h2>
+      <img src="{{root}}{{issue_share_graphic}}" width="1200" height="630" loading="lazy" decoding="async" alt="Anemone Magazine share graphic for {{issue_title}}">
+      <div class="actions">
+        <button class="button" type="button" data-copy-link="issue-copy-status" hidden>Copy issue link</button>
+        <a class="text-link" href="{{root}}{{issue_share_graphic}}" download="anemone-{{issue_slug}}-share.png">Download graphic</a>
+      </div>
+      <p class="copy-link-status small" id="issue-copy-status" role="status"></p>
+    </aside>
+  </div>
+  <section class="reading-guide-newsletter" aria-labelledby="next-issue">
+    <h2 id="next-issue">Get the next issue by email</h2>
+    <a class="button" href="{{root}}#newsletter">Join the newsletter</a>
+  </section>
+</article>
+<script src="{{root}}assets/share-link.js" defer></script>

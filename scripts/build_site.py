@@ -162,16 +162,19 @@ def pick_spotlight(pick, root):
 </section>'''
 
 
+def canva_page_link(reader, page_id):
+    if not reader.startswith('https://www.canva.com/design/') or not re.fullmatch(r'[A-Za-z0-9_-]+', page_id):
+        raise ValueError('A Canva page link needs an issue reader URL and a valid page ID')
+    return f'{reader.split("#", 1)[0]}#page-{page_id}'
+
+
 def pick_body(pick, issue, root, graphic):
     title = escape(pick['title'])
     reader = escape(pick['reader'])
     reading_link = reader
     reading_label = 'Read the full piece'
     if page_id := pick.get('canva_page_id'):
-        issue_reader = issue.get('reader', '').split('#', 1)[0]
-        if not issue_reader.startswith('https://www.canva.com/design/') or not re.fullmatch(r'[A-Za-z0-9_-]+', page_id):
-            raise ValueError(f'Check the Canva reader URL and page ID for {pick["slug"]}')
-        reading_link = escape(f'{issue_reader}#page-{page_id}')
+        reading_link = escape(canva_page_link(issue.get('reader', ''), page_id))
         reading_label = 'Read in the original issue'
     return f'''<article class="wrap pick-article">
   <header class="page-heading page-heading-art">
@@ -371,6 +374,44 @@ def issue_body(issue, default_artwork):
 </article>'''
 
 
+def issue_reading_guide(issue, root, graphic):
+    guide = issue['reading_guide']
+    reader = issue['reader']
+    features = []
+    contents = []
+    for piece in guide['pieces']:
+        title = escape(piece['title'])
+        author = escape(piece['author'])
+        url = escape(canva_page_link(reader, piece['canva_page_id']))
+        page = f'Page {piece["page"]}' if 'page' in piece else 'Canva contents'
+        contents.append(f'''<li><a href="{url}">
+          <span><strong>{title}</strong><span class="reading-guide-byline">{author}</span></span>
+          <span class="reading-guide-page small">{page}</span>
+        </a></li>''')
+        if note := piece.get('featured_note'):
+            features.append(f'''<article class="reading-guide-feature">
+        <h3>{title}</h3>
+        <p class="reading-guide-byline">{author}</p>
+        <p>{escape(note)}</p>
+        <a class="text-link" href="{url}" aria-label="Read {title} on Canva">Read this piece</a>
+      </article>''')
+
+    template = (SOURCE / 'issue-reading.html').read_text(encoding='utf-8')
+    return substitute(template, {
+        'root': root,
+        'issue_slug': escape(issue['slug']),
+        'issue_title': escape(issue['title']),
+        'issue_metadata': escape(metadata(issue)),
+        'issue_subtitle': escape(guide['subtitle']),
+        'issue_intro': escape(guide['intro']),
+        'issue_cover': cover(issue, root, detail=True),
+        'issue_reader': escape(reader),
+        'issue_features': '\n      '.join(features),
+        'issue_toc': '\n        '.join(contents),
+        'issue_share_graphic': escape(graphic),
+    })
+
+
 def migration_redirect(destination, message):
     return f'''<header class="page-heading wrap">
   <h1>{message}</h1>
@@ -523,8 +564,18 @@ def build():
 
     for series, editions in issue_series.items():
         for index, issue in enumerate(editions):
-            body = issue_body(issue, page_artwork['issues']) + issue_navigation(series, editions, index)
-            render(issue['slug'], issue['title'], f'{metadata(issue)} from Anemone Magazine.', body)
+            graphic = None
+            if guide := issue.get('reading_guide'):
+                graphic = f'assets/share/{issue["slug"]}.png'
+                if not (OUTPUT / graphic).is_file():
+                    raise FileNotFoundError(OUTPUT / graphic)
+                body = issue_reading_guide(issue, relative_root(issue['slug']), graphic)
+                description = guide['intro']
+            else:
+                body = issue_body(issue, page_artwork['issues'])
+                description = f'{metadata(issue)} from Anemone Magazine.'
+            body += issue_navigation(series, editions, index)
+            render(issue['slug'], issue['title'], description, body, share_image=graphic)
 
     for pick in picks:
         slug = f'editors-picks/{pick["slug"]}'
